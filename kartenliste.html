@@ -23,146 +23,76 @@
             color: var(--text); 
         }
 
-        /* Zurück-Button */
+        .header-area { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 50px; flex-wrap: wrap; }
+        .set-logo { height: 80px; width: auto; object-fit: contain; }
+
         .back { 
-            display: inline-block; 
-            margin-bottom: 20px; 
-            text-decoration: none; 
-            color: var(--primary); 
-            font-weight: bold; 
-            float: left; 
-            padding: 10px 18px; 
-            background: var(--white); 
-            border-radius: 8px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            transition: 0.2s; 
+            display: inline-block; text-decoration: none; color: var(--primary); font-weight: bold; 
+            float: left; padding: 10px 18px; background: var(--white); border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.2s; 
         }
         .back:hover { background: var(--primary); color: var(--white); }
         
-        h1 { margin-top: 60px; color: var(--text); margin-bottom: 10px; }
-
-        /* Fortschrittsbalken Styles */
         .progress-container { 
-            background: var(--white); 
-            padding: 20px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            margin-bottom: 25px; 
-            clear: both;
+            background: var(--white); padding: 20px; border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 20px 0; clear: both;
         }
-        .progress-bar-bg { 
-            background: #e0e0e0; 
-            border-radius: 10px; 
-            height: 24px; 
-            width: 100%; 
-            overflow: hidden; 
-            margin-top: 12px; 
-            border: 1px solid #ddd;
-        }
-        .progress-bar-fill { 
-            background: linear-gradient(90deg, var(--primary), var(--secondary)); 
-            height: 100%; 
-            width: 0%; 
-            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-        #progressText { font-weight: bold; font-size: 1.1em; color: var(--text); }
+        .progress-bar-bg { background: #e0e0e0; border-radius: 10px; height: 24px; overflow: hidden; margin-top: 12px; border: 1px solid #ddd; }
+        .progress-bar-fill { background: linear-gradient(90deg, var(--primary), var(--secondary)); height: 100%; width: 0%; transition: width 0.5s ease; }
 
-        /* Suchfeld */
-        .search-box { 
-            width: 100%; 
-            padding: 15px; 
-            margin-bottom: 25px; 
-            border: 2px solid var(--primary); 
-            border-radius: 12px; 
-            font-size: 17px; 
-            outline: none; 
-            box-sizing: border-box; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-        }
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .select-all-area { background: var(--white); padding: 10px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; font-weight: bold; }
+
+        .search-box { flex-grow: 1; padding: 15px; border: 2px solid var(--primary); border-radius: 12px; font-size: 17px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         
-        /* Tabelle */
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            background: var(--white); 
-            border-radius: 12px; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
-            position: relative;
-        }
-        th { 
-            background-color: var(--primary); 
-            color: var(--white); 
-            padding: 18px; 
-            text-align: left; 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-        }
-        td { padding: 14px; border-bottom: 1px solid #eee; text-align: left; position: relative; }
+        table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        th { background-color: var(--primary); color: var(--white); padding: 18px; text-align: left; position: sticky; top: 0; z-index: 10; }
+        td { padding: 14px; border-bottom: 1px solid #eee; text-align: left; }
 
-        /* Zoom-Effekt Fix (Kein Abschneiden) */
         .card-img { 
-            width: 65px; height: 90px; 
-            object-fit: contain; 
-            cursor: zoom-in; 
-            background: #f9f9f9; 
-            border-radius: 5px; 
-            transition: transform 0.25s ease-in-out; 
-            position: relative; 
-            z-index: 1; 
-            transform-origin: left center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 65px; height: 90px; object-fit: contain; cursor: zoom-in; 
+            background: #f9f9f9; border-radius: 5px; transition: transform 0.25s ease; 
+            position: relative; z-index: 1; transform-origin: left center;
         }
-        .card-img:hover { 
-            transform: scale(4.8); 
-            z-index: 9999; 
-            box-shadow: 0 15px 45px rgba(0,0,0,0.6); 
-            border: 1px solid #ccc; 
-        }
+        .card-img:hover { transform: scale(4.8); z-index: 9999; box-shadow: 0 15px 45px rgba(0,0,0,0.6); }
 
-        /* Status-Farben */
         .owned-row { background-color: #ebfaed !important; }
         .hidden { display: none !important; }
-        
-        .name-de { font-size: 1.1em; font-weight: bold; color: var(--text); display: block; }
+        .name-de { font-size: 1.1em; font-weight: bold; display: block; }
         .name-en { font-size: 0.85em; color: #7f8c8d; font-style: italic; }
-        
-        input[type="checkbox"] { 
-            transform: scale(1.7); 
-            cursor: pointer; 
-            accent-color: var(--secondary);
-        }
+        input[type="checkbox"] { transform: scale(1.6); cursor: pointer; accent-color: var(--secondary); }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back">← Zurück zur Übersicht</a>
-    <h1 id="setTitle">Lade Set...</h1>
+    <a href="index.html" class="back">← Zurück</a>
+
+    <div class="header-area">
+        <img id="setLogoImg" class="set-logo" src="" alt="Set Logo">
+        <h1 id="setTitle">Lade Set...</h1>
+    </div>
     
     <div class="progress-container">
         <div id="progressText">Berechne Fortschritt...</div>
-        <div class="progress-bar-bg">
-            <div id="progressBar" class="progress-bar-fill"></div>
+        <div class="progress-bar-bg"><div id="progressBar" class="progress-bar-fill"></div></div>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="searchInput" class="search-box" placeholder="Suche..." onkeyup="filterTable()">
+        <div class="select-all-area">
+            <label for="selectAll">Alle wählen:</label>
+            <input type="checkbox" id="selectAll" onchange="toggleAll(this)">
         </div>
     </div>
 
-    <input type="text" id="searchInput" class="search-box" placeholder="Suche nach Name (DE/EN) oder Kartennummer..." onkeyup="filterTable()">
-
     <table>
         <thead>
-            <tr>
-                <th>Bild</th>
-                <th>Nr.</th>
-                <th>Name</th>
-                <th>Seltenheit</th>
-                <th>Besitz</th>
-            </tr>
+            <tr><th>Bild</th><th>Nr.</th><th>Name</th><th>Seltenheit</th><th>Besitz</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
 
     <script>
-        // Set-ID aus der URL auslesen (z.B. kartenliste.html?set=base1)
         const urlParams = new URLSearchParams(window.location.search);
         const setId = urlParams.get('set') || 'base1';
         let allCards = [];
@@ -175,84 +105,80 @@
             "cel25": "Celebrations"
         };
 
-        // Daten laden
         async function loadSetData() {
-            document.getElementById('setTitle').innerText = setNames[setId] || "Pokémon Kartenset";
+            document.getElementById('setTitle').innerText = setNames[setId] || "Pokémon Set";
+            
+            // Pfad geändert auf ./bilder/SETID.png
+            document.getElementById('setLogoImg').src = `./bilder/${setId}.png`;
+            
+            document.getElementById('setLogoImg').onerror = function() {
+                this.style.display = 'none';
+            };
+            
             try {
-                // Zugriff auf die JSON im Unterordner 'daten/'
                 const response = await fetch(`./daten/${setId}.json`);
-                if (!response.ok) throw new Error("JSON konnte nicht geladen werden");
                 allCards = await response.json();
                 renderTable();
                 updateProgress();
             } catch (err) {
-                console.error(err);
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:red; padding:30px;">Fehler: Die Datei 'daten/${setId}.json' wurde nicht gefunden.</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5">Fehler beim Laden.</td></tr>`;
             }
         }
 
-        // Tabelle aufbauen
         function renderTable() {
             const body = document.getElementById('tableBody');
             body.innerHTML = '';
-
             allCards.forEach(card => {
                 const isOwned = localStorage.getItem(card.id) === 'true';
                 const row = document.createElement('tr');
                 if(isOwned) row.classList.add('owned-row');
-                
-                // Bild-URL von der TCG API
                 const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
-                
-                // Such-Index erstellen (Deutsch, Englisch und Nummer)
-                const searchTerms = `${card.name} ${card.nameDE || ''} ${card.n}`.toLowerCase();
-                
-                row.setAttribute('data-search', searchTerms);
+                row.setAttribute('data-search', `${card.name} ${card.nameDE || ''} ${card.n}`.toLowerCase());
                 row.innerHTML = `
-                    <td><img src="${imgUrl}" class="card-img" loading="lazy" alt="${card.name}"></td>
+                    <td><img src="${imgUrl}" class="card-img" loading="lazy"></td>
                     <td><b>${card.n}</b></td>
-                    <td>
-                        <span class="name-de">${card.nameDE || card.name}</span>
-                        <span class="name-en">(${card.name})</span>
-                    </td>
+                    <td><span class="name-de">${card.nameDE || card.name}</span><span class="name-en">(${card.name})</span></td>
                     <td><small>${card.r}</small></td>
-                    <td><input type="checkbox" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}', this)"></td>
+                    <td><input type="checkbox" class="card-check" data-id="${card.id}" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}', this)"></td>
                 `;
                 body.appendChild(row);
             });
         }
 
-        // Karte als besessen markieren
         function toggleCard(id, checkbox) {
             localStorage.setItem(id, checkbox.checked);
             checkbox.closest('tr').classList.toggle('owned-row', checkbox.checked);
             updateProgress();
         }
 
-        // Fortschrittsbalken aktualisieren
+        function toggleAll(source) {
+            const rows = document.querySelectorAll('#tableBody tr:not(.hidden)');
+            rows.forEach(row => {
+                const checkbox = row.querySelector('.card-check');
+                const id = checkbox.getAttribute('data-id');
+                checkbox.checked = source.checked;
+                localStorage.setItem(id, source.checked);
+                row.classList.toggle('owned-row', source.checked);
+            });
+            updateProgress();
+        }
+
         function updateProgress() {
             if (allCards.length === 0) return;
-            
             const owned = allCards.filter(card => localStorage.getItem(card.id) === 'true').length;
-            const total = allCards.length;
-            const percent = Math.round((owned / total) * 100);
-
+            const percent = Math.round((owned / allCards.length) * 100);
             document.getElementById('progressBar').style.width = percent + "%";
-            document.getElementById('progressText').innerText = `${owned} / ${total} Karten gesammelt (${percent}%)`;
+            document.getElementById('progressText').innerText = `${owned} / ${allCards.length} Karten (${percent}%)`;
         }
 
-        // Suchfunktion
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.querySelectorAll('#tableBody tr');
-            
-            rows.forEach(row => {
-                const text = row.getAttribute('data-search');
-                row.classList.toggle('hidden', !text.includes(query));
+            document.querySelectorAll('#tableBody tr').forEach(row => {
+                row.classList.toggle('hidden', !row.getAttribute('data-search').includes(query));
             });
+            document.getElementById('selectAll').checked = false;
         }
 
-        // Initialisierung beim Laden der Seite
         window.onload = loadSetData;
     </script>
 </body>
