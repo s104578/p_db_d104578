@@ -6,33 +6,38 @@
     <title>Pokémon Karten Datenbank</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; text-align: center; background-color: #f4f7f6; }
-        .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; float: left; padding: 5px 10px; background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .search-box { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #3498db; border-radius: 10px; font-size: 16px; outline: none; }
+        .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; float: left; padding: 8px 15px; background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .search-box { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #3498db; border-radius: 10px; font-size: 16px; outline: none; box-sizing: border-box; }
         
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* Zoom-Fix: Kein overflow:hidden an der Tabelle oder den Zellen */
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
         th { background-color: #3498db; color: white; padding: 15px; text-align: left; }
         td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; position: relative; }
 
-        /* Zoom-Fix: Kein overflow:hidden mehr an der Tabelle */
         .card-img { 
             width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; 
             background: #f9f9f9; border-radius: 4px; transition: transform 0.25s ease-in-out; 
             position: relative; z-index: 1; transform-origin: left center;
         }
+
         .card-img:hover { 
-            transform: scale(4.5); z-index: 9999; 
+            transform: scale(4.5); 
+            z-index: 9999; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #ddd;
         }
 
         .owned-row { background-color: #e8f5e9 !important; }
         .hidden { display: none !important; }
+        h1 { color: #2c3e50; }
+        input[type="checkbox"] { transform: scale(1.5); cursor: pointer; }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back">← Zurück zur Übersicht</a>
-    <h1 id="setTitle">Lade Set-Daten...</h1>
+    <a href="index.html" class="back">← Zurück</a>
+    <h1 id="setTitle">Lade Set...</h1>
     
-    <input type="text" id="searchInput" class="search-box" placeholder="Name oder Nummer suchen..." onkeyup="filterTable()">
+    <input type="text" id="searchInput" class="search-box" placeholder="Suche (z.B. Glurak, Charizard oder 004)..." onkeyup="filterTable()">
 
     <table>
         <thead>
@@ -45,24 +50,21 @@
         const urlParams = new URLSearchParams(window.location.search);
         const setId = urlParams.get('set') || 'base1';
 
-        // Mapping für die Anzeigenamen
         const setNames = {
             "base1": "Base Set", "base2": "Base Set 2", 
-            "ex3": "EX Ruby & Sapphire", "xy12": "Evolutions", "cel25": "Celebrations"
+            "ex3": "EX Rubin & Saphir", "xy12": "Evolutions", "cel25": "Celebrations"
         };
 
-        async function loadSet() {
-            document.getElementById('setTitle').innerText = setNames[setId] || "Unbekanntes Set";
-            
+        async function loadData() {
+            document.getElementById('setTitle').innerText = setNames[setId] || "Pokémon Set";
             try {
-                // Lädt die lokale JSON-Datei aus dem Ordner 'daten'
                 const response = await fetch(`./daten/${setId}.json`);
-                if (!response.ok) throw new Error("Datei nicht gefunden");
+                if (!response.ok) throw new Error("JSON fehlt");
                 const cards = await response.json();
                 renderTable(cards);
             } catch (err) {
                 console.error(err);
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Fehler: Die Datei daten/${setId}.json konnte nicht geladen werden.</td></tr>`;
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:red; padding:20px;">Datei daten/${setId}.json nicht gefunden.</td></tr>`;
             }
         }
 
@@ -75,14 +77,17 @@
                 const row = document.createElement('tr');
                 if(isOwned) row.classList.add('owned-row');
                 
-                // Bild-URL bleibt dynamisch von der TCG-API (Bilder werden meist nicht blockiert)
                 const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
+                const displayName = card.nameDE ? `${card.nameDE} <br><small style="color:gray;">(${card.name})</small>` : card.name;
                 
-                row.setAttribute('data-search', (card.name + " " + card.n).toLowerCase());
+                // Such-Index für Deutsch, Englisch und Nummer
+                const searchTerms = `${card.name} ${card.nameDE || ''} ${card.n}`.toLowerCase();
+                
+                row.setAttribute('data-search', searchTerms);
                 row.innerHTML = `
                     <td><img src="${imgUrl}" class="card-img" loading="lazy"></td>
                     <td>${card.n}</td>
-                    <td><strong>${card.name}</strong></td>
+                    <td><strong>${displayName}</strong></td>
                     <td>${card.r}</td>
                     <td><input type="checkbox" ${isOwned ? 'checked' : ''} onchange="toggleOwn('${card.id}', this)"></td>
                 `;
@@ -102,7 +107,7 @@
             });
         }
 
-        window.onload = loadSet;
+        window.onload = loadData;
     </script>
 </body>
 </html>
