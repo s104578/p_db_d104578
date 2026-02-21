@@ -12,7 +12,20 @@
         .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; color: white; }
         .btn-export { background-color: #3498db; }
         .btn-import { background-color: #95a5a6; }
-        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .section-title {
+    width: 100%;
+    font-size: 1.2rem; /* Viel kleiner als vorher */
+    color: #fff;
+    margin: 20px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+        .sets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Kacheln bleiben klein */
+    gap: 15px;
+    margin-bottom: 30px;
+}
         .card-wrapper { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .set-card {
             background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px;
@@ -41,99 +54,59 @@
 
   <div class="container">
     <h2 class="category-title">Englische & Deutsche Sets</h2>
-    <div class="sets-grid">
-        
+   <div class="sets-grid">
         <a href="kartenliste.html?set=base4" class="card-wrapper" data-id="base4" data-total="130">
-            <div class="set-card">
-                <img src="bilder/base4.png" alt="Base Set 2">
-                <h3>Base Set 2</h3>
-            </div>
+            <div class="set-card"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
                 <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">000/130</span></div>
             </div>
         </a>
-
         <a href="kartenliste.html?set=ex1" class="card-wrapper" data-id="ex1" data-total="109">
-            <div class="set-card">
-                <img src="bilder/ex1.png" alt="EX Ruby & Sapphire">
-                <h3>EX Ruby & Sapphire</h3>
-            </div>
+            <div class="set-card"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex1"></div></div>
                 <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">000/109</span></div>
             </div>
         </a>
-
         <a href="kartenliste.html?set=xy12" class="card-wrapper" data-id="xy12" data-total="113">
-            <div class="set-card">
-                <img src="bilder/xy12.png" alt="Evolutions">
-                <h3>Evolutions</h3>
-            </div>
+            <div class="set-card"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
                 <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/113</span></div>
             </div>
         </a>
-
         <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="25">
-            <div class="set-card">
-                <img src="bilder/cel25.png" alt="Celebrations">
-                <h3>Celebrations</h3>
-            </div>
+            <div class="set-card"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
                 <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/25</span></div>
             </div>
         </a>
+    </div>
 
-    </div> <hr class="separator">
-
-    <h2 class="category-title">Japanische Sets</h2>
-    <div class="sets-grid" id="japanese-sets">
-       <a href="kartenliste.html?set=sm10b" class="card-wrapper" data-id="sm10b" data-total="69">
-    <div class="set-card">
-        <img src="bilder/sm10b.png" alt="Sky Legends">
-        <h3>Sky Legends (SM10b)</h3>
-    </div>
-    <div class="progress-section">
-        <div class="progress-bar"><div class="progress-fill" id="fill-sm10b"></div></div>
-        <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">000/69</span></div>
-    </div>
-</a>
-
-<a href="kartenliste.html?set=sm11" class="card-wrapper" data-id="sm11" data-total="115">
-    <div class="set-card">
-        <img src="bilder/sm11.png" alt="Miracle Twins">
-        <h3>Miracle Twins (SM11)</h3>
-    </div>
-    <div class="progress-section">
-        <div class="progress-bar"><div class="progress-fill" id="fill-sm11"></div></div>
-        <div class="stats"><span id="perc-sm11">0%</span><span id="stat-sm11">000/115</span></div>
-    </div>
-</a>
-
-<a href="kartenliste.html?set=sm11a" class="card-wrapper" data-id="sm11a" data-total="80">
-    <div class="set-card">
-        <img src="bilder/sm11a.png" alt="Remix Bout">
-        <h3>Remix Bout (SM11a)</h3>
-    </div>
-    <div class="progress-section">
-        <div class="progress-bar"><div class="progress-fill" id="fill-sm11a"></div></div>
-        <div class="stats"><span id="perc-sm11a">0%</span><span id="stat-sm11a">000/80</span></div>
-    </div>
-</a>
-
-<a href="kartenliste.html?set=smp2" class="card-wrapper" data-id="smp2" data-total="24">
-    <div class="set-card">
-        <img src="bilder/smp2.png" alt="Detective Pikachu">
-        <h3>Detective Pikachu (SMP2)</h3>
-    </div>
-    <div class="progress-section">
-        <div class="progress-bar"><div class="progress-fill" id="fill-smp2"></div></div>
-        <div class="stats"><span id="perc-smp2">0%</span><span id="stat-smp2">000/24</span></div>
-    </div>
-</a>
+    <h2 class="section-title">Japanische Sets</h2>
+    <div class="sets-grid">
+        <a href="kartenliste.html?set=sm10b" class="card-wrapper" data-id="sm10b" data-total="69">
+            <div class="set-card"><img src="bilder/sm10b.png"><h3>Sky Legends</h3></div>
+            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm10b"></div></div>
+            <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">0/69</span></div></div>
+        </a>
+        <a href="kartenliste.html?set=sm11" class="card-wrapper" data-id="sm11" data-total="115">
+            <div class="set-card"><img src="bilder/sm11.png"><h3>Miracle Twins</h3></div>
+            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11"></div></div>
+            <div class="stats"><span id="perc-sm11">0%</span><span id="stat-sm11">0/115</span></div></div>
+        </a>
+        <a href="kartenliste.html?set=sm11a" class="card-wrapper" data-id="sm11a" data-total="80">
+            <div class="set-card"><img src="bilder/sm11a.png"><h3>Remix Bout</h3></div>
+            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11a"></div></div>
+            <div class="stats"><span id="perc-sm11a">0%</span><span id="stat-sm11a">0/80</span></div></div>
+        </a>
+        <a href="kartenliste.html?set=smp2" class="card-wrapper" data-id="smp2" data-total="24">
+            <div class="set-card"><img src="bilder/smp2.png"><h3>Det. Pikachu</h3></div>
+            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-smp2"></div></div>
+            <div class="stats"><span id="perc-smp2">0%</span><span id="stat-smp2">0/24</span></div></div>
+        </a>
     </div>
 </div>
     <script>
@@ -199,5 +172,6 @@
     </script>
 </body>
 </html>
+
 
 
