@@ -12,8 +12,33 @@
 }
  }
         h1 { text-align: center; margin-bottom: 30px; }
+        /* Zentriert den gesamten Inhalt der Seite */
+        .container {
+    max-width: 1200px; /* Breite von 4 Kacheln + Gaps */
+    margin: 0 auto;    /* Das zentriert die gesamte Website */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
         .top-controls { display: flex; gap: 15px; margin-bottom: 40px; }
         .search-bar { flex-grow: 1; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        /* Suchleiste auf die Breite von 4 Kacheln begrenzen */
+.search-container {
+    width: 100%;
+    max-width: 1200px; /* Gleiche Breite wie das Grid unten */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+#search-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center; /* Text in der Suche mittig */
+}
         .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; color: white; }
         .btn-export { background-color: #3498db; }
         .btn-import { background-color: #95a5a6; }
@@ -27,15 +52,13 @@
 
     .sets-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    padding: 20px 0;
+    grid-template-columns: repeat(4, 1fr); /* Fest auf 4 Spalten für die Suche-Optik */
+    gap: 20px;
+    width: 100%;
 }
     .card-wrapper {
-    text-decoration: none !important; /* Entfernt Unterstreichungen */
+    text-decoration: none !important;
     color: #000 !important;
-    display: block;
-    text-align: center; /* Zentriert Namen und Stats */
 }
 /* Die graue Kachel */
 .set-card-box {
@@ -85,18 +108,20 @@
     width: 0%; /* Wird per JS gefüllt */
 }
 
+/* Zahlen wieder links und rechts außen unter dem Balken */
 .stats {
     display: flex;
-    justify-content: center; /* Zentriert die Stats */
-    gap: 20px; /* Abstand zwischen Prozent und Nummer */
+    justify-content: space-between; /* Drückt 0% nach links und 0/130 nach rechts */
+    width: 100%;
     margin-top: 5px;
-    color: #000;
-    font-size: 0.85rem;
-    text-decoration: none;
+    font-size: 0.8rem;
+    color: #000 !important;
+    text-decoration: none !important;
 }
         #importFile { display: none; }
         .hidden { display: none; }
         .stats span {
+    text-decoration: none !important;
     color: #000 !important;
 }
 
@@ -231,6 +256,7 @@
     </script>
 </body>
 </html>
+
 
 
 
