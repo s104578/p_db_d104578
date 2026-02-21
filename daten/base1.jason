@@ -1,0 +1,8 @@
+[
+    {"id": "base1-1", "n": "1", "name": "Alakazam", "r": "Rare Holo"},
+    {"id": "base1-2", "n": "2", "name": "Blastoise", "r": "Rare Holo"},
+    {"id": "base1-3", "n": "3", "name": "Chansey", "r": "Rare Holo"},
+    {"id": "base1-4", "n": "4", "name": "Charizard", "r": "Rare Holo"},
+    {"id": "base1-15", "n": "15", "name": "Venusaur", "r": "Rare Holo"},
+    {"id": "base1-58", "n": "58", "name": "Pikachu", "r": "Common"}
+]
