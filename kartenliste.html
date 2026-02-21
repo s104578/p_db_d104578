@@ -3,205 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartenliste - Pokémon Sammlung</title>
+    <title>Pokémon Set Liste</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: #0078d7;
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #set-logo {
+            max-height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progress-text {
             font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
         }
 
-        h1 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
+            align-items: center;
         }
 
-        .search-bar {
-            width: 100%;
+        #search-input {
+            flex-grow: 1;
             padding: 12px 20px;
+            border: 2px solid #3498db;
+            border-radius: 10px;
             font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        }
+
+        .select-all-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #eee;
+            padding: 10px 15px;
+            border-radius: 10px;
+            white-space: nowrap;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
+            margin-top: 10px;
         }
 
         th {
-            background-color: #f9f9f9;
-            position: sticky;
-            top: 0;
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
         }
 
-        .card-img-cell {
-            width: 80px;
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
         }
 
-            .card-img-cell img {
-                width: 60px;
-                height: 84px;
-                object-fit: contain;
-                border-radius: 4px;
-                cursor: zoom-in;
-                transition: transform 0.2s ease;
-                background-color: #f0f0f0;
-            }
+        .card-img {
+            width: 50px;
+            cursor: zoom-in;
+            transition: transform 0.2s;
+            border-radius: 3px;
+        }
 
-                .card-img-cell img:hover {
-                    transform: scale(4);
-                    position: relative;
-                    z-index: 999;
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-                }
+        .card-img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Modal für Zoom */
+        #zoom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+
+        #zoom-modal img {
+            max-height: 90%;
+            max-width: 90%;
+            border-radius: 15px;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+        }
 
         input[type="checkbox"] {
-            transform: scale(1.4);
+            transform: scale(1.5);
             cursor: pointer;
-        }
-
-        .status-msg {
-            text-align: center;
-            padding: 40px;
-            color: #888;
         }
 
         .error-msg {
             color: #e74c3c;
             font-weight: bold;
+            text-align: center;
+            padding: 20px;
         }
-    </style>
-
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <a href="index.html" class="back-btn">← Zurück</a>
+<div class="container">
+    <div class="header-section">
         <img id="set-logo" src="" alt="Set Logo">
-        <div class="header-info">
-            <h1 id="set-title">Lade Set...</h1>
-            <p id="set-stats">Karten werden geladen...</p>
+        <h1 id="set-title">Lade Set...</h1>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-text" id="stats-text">Berechne Fortschritt...</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
         </div>
     </div>
 
-    <div id="loading">Karten werden geladen...</div>
-    <div class="grid" id="card-grid"></div>
+    <div class="controls">
+        <input type="text" id="search-input" placeholder="Suche (z.B. Glurak oder Nummer)...">
+        <div class="select-all-container">
+            <label for="select-all">Alle wählen:</label>
+            <input type="checkbox" id="select-all">
+        </div>
+    </div>
 
-    <script>
-        // Hilfsfunktion: Parameter aus URL lesen
-        const urlParams = new URLSearchParams(window.location.search);
-        const setId = urlParams.get('set');
+    <table id="card-table">
+        <thead>
+            <tr>
+                <th>Bild</th>
+                <th>Nr.</th>
+                <th>Name</th>
+                <th>Seltenheit</th>
+                <th>Besitz</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            </tbody>
+    </table>
+</div>
 
-        if (!setId) {
-            window.location.href = 'index.html';
-        }
+<div id="zoom-modal" onclick="this.style.display='none'">
+    <img id="zoomed-img" src="">
+</div>
 
-        async function loadCards() {
-            try {
-                // 1. Lokales Set-Logo setzen
-                const logoImg = document.getElementById('set-logo');
-                logoImg.src = `bilder/${setId}.png`;
-                logoImg.onerror = () => logoImg.style.display = 'none';
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const setId = urlParams.get('set');
+    const storageKey = `owned_${setId}`;
+    let allCards = [];
 
-                // 2. JSON-Daten des Sets laden (aus deinem daten/ Ordner)
-                const response = await fetch(`daten/${setId}.json`);
-                const cards = await response.json();
+    async function init() {
+        if (!setId) return;
 
-                // 3. Speicherstand (LocalStorage) laden
-                const storageKey = `owned_${setId}`;
-                let ownedCards = JSON.parse(localStorage.getItem(storageKey)) || [];
+        // Setze Logo
+        const logo = document.getElementById('set-logo');
+        logo.src = `bilder/${setId}.png`;
+        logo.onerror = () => logo.style.display = 'none';
 
-                const grid = document.getElementById('card-grid');
-                const loading = document.getElementById('loading');
-                const setTitle = document.getElementById('set-title');
-                
-                loading.style.display = 'none';
-                setTitle.innerText = setId.toUpperCase().replace('SM', 'Sun & Moon ');
-
-                grid.innerHTML = '';
-
-                cards.forEach(card => {
-                    const isOwned = ownedCards.includes(card.id);
-                    const cardElement = document.createElement('div');
-                    cardElement.className = `card-item ${isOwned ? 'owned' : ''}`;
-                    cardElement.setAttribute('data-card-id', card.id);
-
-                    // API Bild-URL zusammenbauen
-                    // Die API nutzt meist das Format: setId / cardNumber
-                    // Wir nutzen card.n (Nummer aus der JSON)
-                    const apiImageUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
-
-                    cardElement.innerHTML = `
-                        <div class="status-dot"></div>
-                        <img src="${apiImageUrl}" alt="${card.name}" loading="lazy">
-                        <div class="card-info">
-                            <div class="card-number">#${card.n}</div>
-                            <div>${card.nameDE || card.name}</div>
-                            <small>${card.r}</small>
-                        </div>
-                    `;
-
-                    // Klick-Event zum Markieren
-                    cardElement.onclick = () => toggleCard(card.id, cardElement, storageKey);
-                    
-                    grid.appendChild(cardElement);
-                });
-
-                updateStats(cards.length, ownedCards.length);
-
-            } catch (error) {
-                console.error("Fehler beim Laden der Karten:", error);
-                document.getElementById('loading').innerText = "Fehler beim Laden der Set-Daten.";
-            }
-        }
-
-        function toggleCard(cardId, element, storageKey) {
-            let ownedCards = JSON.parse(localStorage.getItem(storageKey)) || [];
+        try {
+            const response = await fetch(`daten/${setId}.json`);
+            if (!response.ok) throw new Error();
+            allCards = await response.json();
             
-            if (ownedCards.includes(cardId)) {
-                ownedCards = ownedCards.filter(id => id !== cardId);
-                element.classList.remove('owned');
-            } else {
-                ownedCards.push(cardId);
-                element.classList.add('owned');
-            }
-
-            localStorage.setItem(storageKey, JSON.stringify(ownedCards));
-            
-            // Stats live aktualisieren
-            const total = document.querySelectorAll('.card-item').length;
-            updateStats(total, ownedCards.length);
+            document.getElementById('set-title').innerText = setId.toUpperCase();
+            renderTable(allCards);
+            updateProgress();
+        } catch (e) {
+            document.getElementById('table-body').innerHTML = `<tr><td colspan="5" class="error-msg">Fehler beim Laden der Datei: daten/${setId}.json</td></tr>`;
         }
+    }
 
-        function updateStats(total, owned) {
-            const percent = Math.round((owned / total) * 100);
-            document.getElementById('set-stats').innerText = 
-                `${owned} von ${total} Karten gesammelt (${percent}%)`;
+    function renderTable(cards) {
+        const tbody = document.getElementById('table-body');
+        const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
+        tbody.innerHTML = '';
+
+        cards.forEach(card => {
+            const tr = document.createElement('tr');
+            const isOwned = owned.includes(card.id);
+            const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
+
+            tr.innerHTML = `
+                <td><img src="${imgUrl}" class="card-img" onclick="zoom('${imgUrl}')"></td>
+                <td>${card.n}</td>
+                <td>${card.nameDE || card.name}</td>
+                <td>${card.r || 'Common'}</td>
+                <td class="checkbox-cell">
+                    <input type="checkbox" class="card-check" data-id="${card.id}" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}')">
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function toggleCard(id) {
+        let owned = JSON.parse(localStorage.getItem(storageKey)) || [];
+        if (owned.includes(id)) {
+            owned = owned.filter(i => i !== id);
+        } else {
+            owned.push(id);
         }
+        localStorage.setItem(storageKey, JSON.stringify(owned));
+        updateProgress();
+    }
 
-        // Initialisierung
-        loadCards();
-    </script>
+    function updateProgress() {
+        const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
+        const percent = allCards.length ? Math.round((owned.length / allCards.length) * 100) : 0;
+        
+        document.getElementById('progress-fill').style.width = percent + '%';
+        document.getElementById('stats-text').innerText = `${owned.length} / ${allCards.length} Karten gesammelt (${percent}%)`;
+    }
+
+    // Suchfunktion
+    document.getElementById('search-input').oninput = function(e) {
+        const term = e.target.value.toLowerCase();
+        const filtered = allCards.filter(c => 
+            c.name.toLowerCase().includes(term) || 
+            (c.nameDE && c.nameDE.toLowerCase().includes(term)) ||
+            c.n.toString().includes(term)
+        );
+        renderTable(filtered);
+    };
+
+    // Alle auswählen
+    document.getElementById('select-all').onchange = function(e) {
+        let owned = [];
+        if (e.target.checked) {
+            owned = allCards.map(c => c.id);
+        }
+        localStorage.setItem(storageKey, JSON.stringify(owned));
+        renderTable(allCards);
+        updateProgress();
+    };
+
+    function zoom(url) {
+        const modal = document.getElementById('zoom-modal');
+        document.getElementById('zoomed-img').src = url;
+        modal.style.display = 'flex';
+    }
+
+    init();
+</script>
+
 </body>
 </html>
-
