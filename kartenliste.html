@@ -5,23 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kartenliste</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        .card-img { width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s; background: #f9f9f9; }
+        body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; text-align: center; }
+        .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; float: left; }
+        
+        /* Animation Styles */
+        .loader-container { margin: 50px auto; display: flex; flex-direction: column; align-items: center; }
+        .ball-loader {
+            width: 60px; height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: shake 0.5s infinite ease-in-out, changeBall 8s infinite steps(1);
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(-15deg); }
+            100% { transform: rotate(0deg); }
+        }
+        /* Wechselt alle 2 Sekunden den Ball (4 Bälle = 8s gesamt) */
+        @keyframes changeBall {
+            0% { background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'); }
+            25% { background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png'); }
+            50% { background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png'); }
+            75% { background-image: url('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png'); }
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; display: none; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; }
+        .card-img { width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s; }
         .card-img:hover { transform: scale(4); position: relative; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .loading-box { text-align: center; padding: 50px; color: #888; border: 1px dashed #ccc; border-radius: 10px; }
-        .error-msg { color: #e74c3c; font-weight: bold; text-align: center; padding: 20px; border: 1px solid; border-radius: 5px; }
+        
+        .error-box { display: none; color: #e74c3c; background: #fdf2f2; border: 1px solid #e74c3c; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .btn-retry { background: #0078d7; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
     <a href="index.html" class="back">← Zurück zur Übersicht</a>
-    <h1 id="setTitle">Warte auf API...</h1>
+    <h1 id="setTitle">Suche Karten...</h1>
     
-    <div id="loadingStatus" class="loading-box">Verbinde mit Pokémon-Datenbank...</div>
+    <div id="loader" class="loader-container">
+        <div class="ball-loader"></div>
+        <p id="statusText">Verbindung zur TCG-API wird hergestellt...</p>
+    </div>
 
-    <table id="cardTable" style="display: none;">
+    <div id="errorBox" class="error-box">
+        <p><strong>Verbindung fehlgeschlagen (Failed to Fetch).</strong></p>
+        <p><small id="errorDetail"></small></p>
+        <button class="btn-retry" onclick="location.reload()">Erneut versuchen</button>
+    </div>
+
+    <table id="cardTable">
         <thead><tr><th>Bild</th><th>Nr.</th><th>Name</th><th>Seltenheit</th><th>Besitz</th></tr></thead>
         <tbody id="tableBody"></tbody>
     </table>
@@ -31,48 +65,30 @@
         const urlParams = new URLSearchParams(window.location.search);
         const setId = urlParams.get('set') || 'base2';
 
-        // Wir nutzen eine robustere Methode für die API
-        async function loadData() {
-            const statusDiv = document.getElementById('loadingStatus');
-            
-            // 1. Versuch: Aus dem Zwischenspeicher (Prefetch)
-            const cached = sessionStorage.getItem('data-' + setId);
-            if (cached) {
-                renderTable(JSON.parse(cached));
-                return;
-            }
-
-            // 2. Versuch: Direkte API-Anfrage mit verstärkten Headern
+        async function loadCards() {
             try {
+                // Erst schauen ob wir die Daten schon im Session-Speicher haben
+                const cached = sessionStorage.getItem('data-' + setId);
+                if (cached) {
+                    renderTable(JSON.parse(cached));
+                    return;
+                }
+
                 const response = await fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${setId}&orderBy=number`, {
                     method: 'GET',
-                    mode: 'cors', // Wichtig für GitHub Pages
-                    headers: {
-                        'X-Api-Key': API_KEY,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'X-Api-Key': API_KEY, 'Accept': 'application/json' }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Server antwortet mit Status ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error("API meldet Fehler " + response.status);
+                
                 const result = await response.json();
-                if (!result.data || result.data.length === 0) {
-                    throw new Error("Keine Karten für dieses Set gefunden.");
-                }
-
                 sessionStorage.setItem('data-' + setId, JSON.stringify(result.data));
                 renderTable(result.data);
 
             } catch (err) {
-                console.error("Fetch Error:", err);
-                statusDiv.innerHTML = `
-                    <div class="error-msg">
-                        Fehler beim Laden: ${err.message}<br>
-                        <small>Tipp: Falls du am PC bist, drücke einmal STRG + F5, um den Cache zu leeren.</small>
-                    </div>`;
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                document.getElementById('errorDetail').innerText = "Ursache: " + err.message;
             }
         }
 
@@ -93,12 +109,11 @@
                 `;
                 body.appendChild(row);
             });
-            document.getElementById('loadingStatus').style.display = 'none';
+            document.getElementById('loader').style.display = 'none';
             document.getElementById('cardTable').style.display = 'table';
         }
 
-        // Start
-        loadData();
+        loadCards();
     </script>
 </body>
 </html>
