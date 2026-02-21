@@ -9,44 +9,46 @@
         .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        .card-img { width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s; }
+        .card-img { width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s; background: #f0f0f0; border-radius: 4px; }
         .card-img:hover { transform: scale(4); position: relative; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .loading { text-align: center; padding: 50px; color: #888; }
-        .error { color: #e74c3c; font-weight: bold; text-align: center; padding: 20px; }
+        .error { color: #e74c3c; font-weight: bold; text-align: center; padding: 20px; border: 1px solid; border-radius: 5px; }
     </style>
 </head>
 <body>
     <a href="index.html" class="back">← Zurück zur Übersicht</a>
-    <h1 id="setTitle">Lade Set...</h1>
-    
+    <h1 id="setTitle">Lade Karten...</h1>
     <table>
-        <thead>
-            <tr><th>Bild</th><th>Nr.</th><th>Name</th><th>Seltenheit</th><th>Besitz</th></tr>
-        </thead>
-        <tbody id="tableBody">
-            <tr><td colspan="5" class="loading" id="msg">Verbindung zur API wird aufgebaut...</td></tr>
-        </tbody>
+        <thead><tr><th>Bild</th><th>Nr.</th><th>Name</th><th>Seltenheit</th><th>Besitz</th></tr></thead>
+        <tbody id="tableBody"><tr><td colspan="5" class="loading" id="msg">Daten werden verarbeitet...</td></tr></tbody>
     </table>
 
     <script>
-        // DEIN API KEY HIER EINTRAGEN
-        const API_KEY = "8a7d064f-e555-4dc1-b9de-78f8f7124817"; 
-
+        const API_KEY = "210128f2-1114-47d0-805d-4e9dd5c364dc"; // WICHTIG: Gleicher Key wie im Index!
         const urlParams = new URLSearchParams(window.location.search);
         const setId = urlParams.get('set') || 'base2';
 
-        async function fetchCards() {
+        async function init() {
+            const cachedData = sessionStorage.getItem('data-' + setId);
+            if (cachedData) {
+                renderTable(JSON.parse(cachedData));
+            } else {
+                fetchFromAPI();
+            }
+        }
+
+        async function fetchFromAPI() {
             try {
                 const response = await fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${setId}&orderBy=number`, {
-                    headers: { 'X-Api-Key': API_KEY }
+                    method: 'GET',
+                    headers: { 'X-Api-Key': API_KEY, 'Accept': 'application/json' }
                 });
-                
-                if (!response.ok) throw new Error("API-Limit erreicht oder falscher Key.");
-                
+                if (!response.ok) throw new Error(`API Fehler: ${response.status}`);
                 const result = await response.json();
+                sessionStorage.setItem('data-' + setId, JSON.stringify(result.data));
                 renderTable(result.data);
             } catch (err) {
-                document.getElementById('msg').innerHTML = `<span class="error">Fehler: ${err.message}</span>`;
+                document.getElementById('msg').innerHTML = `<div class="error">Fehler: ${err.message}<br><small>Stelle sicher, dass dein API-Key korrekt ist und die Seite über HTTPS (GitHub Pages) läuft.</small></div>`;
             }
         }
 
@@ -54,12 +56,11 @@
             const body = document.getElementById('tableBody');
             body.innerHTML = '';
             document.getElementById('setTitle').innerText = cards[0].set.name;
-            
             cards.forEach(card => {
                 const isOwned = localStorage.getItem(card.id) === 'true';
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><img src="${card.images.small}" class="card-img"></td>
+                    <td><img src="${card.images.small}" class="card-img" loading="lazy"></td>
                     <td>${card.number}</td>
                     <td><strong>${card.name}</strong></td>
                     <td>${card.rarity || 'Common'}</td>
@@ -68,8 +69,7 @@
                 body.appendChild(row);
             });
         }
-
-        fetchCards();
+        init();
     </script>
 </body>
 </html>
