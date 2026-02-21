@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Karten Datenbank</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        /* Suchleiste & Backup Buttons */
+        .top-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-export {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-import {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .set-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .set-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-wrapper:hover .set-card {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: #ccc;
+        }
+
+        .set-card img {
+            width: 100%;
+            height: 120px;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        .progress-section {
+            margin-top: 10px;
+            padding: 0 5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #2ecc71;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+
+        #importFile {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pokémon Karten Datenbank</h1>
+
+    <div class="top-controls">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Nach Set suchen...">
+        <button class="btn btn-export" onclick="exportBackup()">Sammlung sichern</button>
+        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Backup laden</button>
+        <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
+    </div>
+
+    <h2>Englisch GB</h2>
+
+    <div class="set-grid" id="setGrid">
+        <a href="kartenliste.html?set=base2" class="card-wrapper" data-name="Base Set 2" data-id="base2" data-total="130">
+            <div class="set-card">
+                <img src="bilder/baseset2.png" alt="Base Set 2">
+                <h3>Base Set 2</h3>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
+                <div class="progress-stats"><span id="perc-base2">0%</span><span id="stat-base2">0/130</span></div>
+            </div>
+        </a>
+
+        <a href="kartenliste.html?set=ex3" class="card-wrapper" data-name="EX Ruby & Sapphire" data-id="ex3" data-total="109">
+            <div class="set-card">
+                <img src="bilder/exruby.png" alt="EX Ruby & Sapphire">
+                <h3>EX Ruby & Sapphire</h3>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-ex3"></div></div>
+                <div class="progress-stats"><span id="perc-ex3">0%</span><span id="stat-ex3">0/109</span></div>
+            </div>
+        </a>
+
+        <a href="kartenliste.html?set=xy12" class="card-wrapper" data-name="Evolutions" data-id="xy12" data-total="108">
+            <div class="set-card">
+                <img src="bilder/evolutions.png" alt="Evolutions">
+                <h3>Evolutions</h3>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
+                <div class="progress-stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/108</span></div>
+            </div>
+        </a>
+
+        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-name="Celebrations" data-id="cel25" data-total="50">
+            <div class="set-card">
+                <img src="bilder/celebrations.png" alt="Celebrations">
+                <h3>Celebrations</h3>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
+                <div class="progress-stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/50</span></div>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        // Suche
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.card-wrapper').forEach(card => {
+                card.style.display = card.getAttribute('data-name').toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        });
+
+        // Fortschrittsberechnung
+        function updateProgress() {
+            document.querySelectorAll('.card-wrapper').forEach(set => {
+                const setId = set.getAttribute('data-id');
+                const total = parseInt(set.getAttribute('data-total'));
+                let count = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith(setId + '-') && localStorage.getItem(key) === 'true') count++;
+                }
+                const percent = Math.round((count / total) * 100);
+                document.getElementById(`fill-${setId}`).style.width = percent + '%';
+                document.getElementById(`perc-${setId}`).innerText = percent + '%';
+                document.getElementById(`stat-${setId}`).innerText = `${count.toString().padStart(3, '0')}/${total}`;
+            });
+        }
+
+        // BACKUP FUNKTIONEN
+        function exportBackup() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                data[key] = localStorage.getItem(key);
+            }
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pokemon_sammlung_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+        }
+
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (confirm("Möchtest du das Backup laden? Aktuelle Daten im Browser werden überschrieben.")) {
+                        localStorage.clear();
+                        for (const key in data) { localStorage.setItem(key, data[key]); }
+                        location.reload();
+                    }
+                } catch (err) { alert("Fehler beim Lesen der Datei!"); }
+            };
+            reader.readAsText(file);
+        }
+
+        window.onload = updateProgress;
+    </script>
+</body>
+</html>

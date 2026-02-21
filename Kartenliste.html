@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartenliste</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #0078d7;
+            font-weight: bold;
+        }
+
+        h1 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            position: sticky;
+            top: 0;
+        }
+
+        .card-img-cell {
+            width: 80px;
+        }
+
+            .card-img-cell img {
+                width: 60px;
+                height: 84px;
+                object-fit: contain;
+                border-radius: 4px;
+                cursor: zoom-in;
+                transition: transform 0.2s ease;
+                background-color: #f0f0f0;
+            }
+
+                .card-img-cell img:hover {
+                    transform: scale(4);
+                    position: relative;
+                    z-index: 999;
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+                }
+
+        input[type="checkbox"] {
+            transform: scale(1.4);
+            cursor: pointer;
+        }
+
+        .status-msg {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Zurück zur Übersicht</a>
+    <h1 id="setTitle">Warte auf API...</h1>
+    <input type="text" id="cardSearch" class="search-bar" placeholder="Name oder Nummer suchen...">
+
+    <table>
+        <thead><tr><th>Bild</th><th>Nr.</th><th>Name</th><th>Seltenheit</th><th>Besitz</th></tr></thead>
+        <tbody id="tableBody">
+            <tr><td colspan="5" class="status-msg" id="statusMessage">Verbindung zur Pokémon-Datenbank wird hergestellt...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        // --- KONFIGURATION ---
+        // Hier deinen API-Key zwischen die Anführungszeichen kopieren:
+        const MY_API_KEY = "8a7d064f-e555-4dc1-b9de-78f8f7124817";
+        // ---------------------
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const setId = urlParams.get('set') || 'base2';
+        let cardsData = [];
+
+        async function fetchCards() {
+            const statusBox = document.getElementById('statusMessage');
+            try {
+                const response = await fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${setId}&orderBy=number`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Api-Key': MY_API_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API-Fehler: ${response.status} ${response.statusText}`);
+                }
+
+                const res = await response.json();
+                cardsData = res.data;
+
+                if (cardsData.length > 0) {
+                    document.getElementById('setTitle').innerText = cardsData[0].set.name;
+                    renderCards(cardsData);
+                } else {
+                    statusBox.innerHTML = "Keine Karten für dieses Set gefunden.";
+                }
+
+            } catch (error) {
+                console.error("Fehler:", error);
+                statusBox.innerHTML = `<span class="error-msg">Fehler beim Laden: ${error.message}</span><br>Prüfe deine Internetverbindung oder deinen API-Key.`;
+            }
+        }
+
+        function renderCards(cards) {
+            const body = document.getElementById('tableBody');
+            body.innerHTML = '';
+            cards.forEach(card => {
+                const isOwned = localStorage.getItem(card.id) === 'true';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td class="card-img-cell"><img src="${card.images.small}" alt="${card.name}"></td>
+                        <td>${card.number}</td>
+                        <td><strong>${card.name}</strong></td>
+                        <td>${card.rarity || 'Common'}</td>
+                        <td><input type="checkbox" ${isOwned ? 'checked' : ''} onchange="localStorage.setItem('${card.id}', this.checked)"></td>
+                    `;
+                body.appendChild(row);
+            });
+        }
+
+        document.getElementById('cardSearch').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = cardsData.filter(c =>
+                c.name.toLowerCase().includes(val) ||
+                c.number.toString().includes(val)
+            );
+            renderCards(filtered);
+        });
+
+        // Start
+        fetchCards();
+    </script>
+</body>
+</html>
