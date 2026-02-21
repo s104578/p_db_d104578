@@ -32,8 +32,8 @@
   {"id": "base1-31", "n": "31", "name": "Jynx", "nameDE": "Rossana", "r": "Uncommon"},
   {"id": "base1-32", "n": "32", "name": "Kadabra", "nameDE": "Kadabra", "r": "Uncommon"},
   {"id": "base1-33", "n": "33", "name": "Kakuna", "nameDE": "Kokuna", "r": "Uncommon"},
-  {"id": "base1-34", "n": "34", "name": "Machoke", "nameDE": "Maschock", "r": "Uncommon"},
-  {"id": "base1-35", "n": "35", "name": "Magmar", "nameDE": "Magmar", "r": "Uncommon"},
+  {"id": "base1-34", "n": "35", "name": "Magmar", "nameDE": "Magmar", "r": "Uncommon"},
+  {"id": "base1-35", "n": "34", "name": "Machoke", "nameDE": "Maschock", "r": "Uncommon"},
   {"id": "base1-36", "n": "36", "name": "Magikarp", "nameDE": "Karpador", "r": "Uncommon"},
   {"id": "base1-37", "n": "37", "name": "Nidorina", "nameDE": "Nidorina", "r": "Uncommon"},
   {"id": "base1-38", "n": "38", "name": "Poliwhirl", "nameDE": "Quaputzi", "r": "Uncommon"},
@@ -48,7 +48,7 @@
   {"id": "base1-47", "n": "47", "name": "Diglett", "nameDE": "Digda", "r": "Common"},
   {"id": "base1-48", "n": "48", "name": "Doduo", "nameDE": "Dodu", "r": "Common"},
   {"id": "base1-49", "n": "49", "name": "Drowzee", "nameDE": "Traumato", "r": "Common"},
-  {"id": "base1-50", "name": "50", "name": "Gastly", "nameDE": "Nebulak", "r": "Common"},
+  {"id": "base1-50", "n": "50", "name": "Gastly", "nameDE": "Nebulak", "r": "Common"},
   {"id": "base1-51", "n": "51", "name": "Koffing", "nameDE": "Smogon", "r": "Common"},
   {"id": "base1-52", "n": "52", "name": "Machop", "nameDE": "Machollo", "r": "Common"},
   {"id": "base1-53", "n": "53", "name": "Magnemite", "nameDE": "Magnetilo", "r": "Common"},
@@ -102,3 +102,4 @@
   {"id": "base1-101", "n": "101", "name": "Psychic Energy", "nameDE": "Psycho-Energie", "r": "Common Energy"},
   {"id": "base1-102", "n": "102", "name": "Water Energy", "nameDE": "Wasser-Energie", "r": "Common Energy"}
 ]
+
