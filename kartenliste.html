@@ -123,26 +123,35 @@
     const storageKey = `owned_${setId}`;
     let allCards = [];
 
-    async function init() {
-        if (!setId) return;
+   async function init() {
+    if (!setId) return;
 
-        const logo = document.getElementById('set-logo');
-        logo.src = `bilder/${setId}.png`;
+    // 1. Logo setzen
+    const logo = document.getElementById('set-logo');
+    logo.src = `bilder/${setId}.png`;
 
-        try {
-            const response = await fetch(`daten/${setId}.json`);
-            allCards = await response.json();
-            
-            // Setzt den Namen des Sets (entweder aus der JSON oder der ID)
-            document.getElementById('set-title').innerText = allCards[0]?.setName || setId.toUpperCase();
-            
-            renderTable(allCards);
-            updateProgress();
-        } catch (e) {
-            document.getElementById('table-body').innerHTML = '<td>Fehler beim Laden.</td>';
-        }
+    // 2. Set-Namen aus der URL holen
+    const setNameFromUrl = urlParams.get('name');
+    if (setNameFromUrl) {
+        document.getElementById('set-title').innerText = setNameFromUrl;
     }
 
+    try {
+        const response = await fetch(`daten/${setId}.json`);
+        allCards = await response.json();
+        
+        // Falls kein Name in der URL war, versuche ihn aus der JSON zu lesen
+        if (!setNameFromUrl) {
+            document.getElementById('set-title').innerText = allCards[0]?.setName || setId.toUpperCase();
+        }
+        
+        renderTable(allCards);
+        updateProgress();
+    } catch (e) {
+        console.error("Fehler beim Laden der JSON:", e);
+        document.getElementById('table-body').innerHTML = '<tr><td colspan="5">Fehler beim Laden der Kartendaten.</td></tr>';
+    }
+}
     function renderTable(cards) {
         const tbody = document.getElementById('table-body');
         const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -195,3 +204,4 @@
 </script>
 </body>
 </html>
+
