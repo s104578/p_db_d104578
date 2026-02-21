@@ -32,26 +32,31 @@
     }
 
     /* Suchbereich: Exakt so breit wie das Grid (1200px) */
-    .top-controls {
-        display: flex;
-        gap: 15px;
-        width: 100%;
-        max-width: 1200px;
-        margin-bottom: 40px;
-        align-items: center;
-    }
+   .top-controls {
+    width: 100%;
+    max-width: 1200px; /* Exakt die Breite der 4 Kacheln */
+    margin: 0 auto 40px auto; /* Zentriert die Sektion und gibt Abstand nach unten */
+    display: flex;
+    flex-direction: column; /* Stapelt Suche und Buttons übereinander für bessere Kontrolle */
+    align-items: center;
+    gap: 20px;
+}
 
     /* Das eigentliche Suchfeld */
     #search-input {
-        flex-grow: 1; /* Nimmt den Platz neben den Buttons ein */
-        padding: 12px 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-        /* Wenn du den Text im Suchfeld mittig willst: */
-        text-align: center; 
-    }
-
+    width: 100%; /* Suchleiste streckt sich über die gesamte Breite des Containers */
+    padding: 15px 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+    .search-wrapper {
+    width: 100%; /* Nutzt die vollen 1200px */
+    display: flex;
+    justify-content: center;
+}
     /* Buttons */
     .btn { 
         padding: 12px 25px; 
@@ -64,6 +69,11 @@
     }
     .btn-export { background-color: #3498db; }
     .btn-import { background-color: #95a5a6; }
+    .button-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
 
     /* Zentrierte Sektionstitel */
     .section-title {
@@ -155,7 +165,7 @@
 <body>
     <h1>Pokémon Karten Datenbank</h1>
     <div class="top-controls">
-        <input type="text" id="searchInput" class="search-bar" placeholder="Nach Set suchen..." onkeyup="filterSets()">
+        <input type="text" id="search-input" class="search-bar" placeholder="Nach Set suchen..." onkeyup="filterSets()">
         <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
         <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
@@ -281,6 +291,7 @@
     </script>
 </body>
 </html>
+
 
 
 
