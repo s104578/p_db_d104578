@@ -7,17 +7,13 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #ffffff; max-width: 1200px; margin: 0 auto; padding: 20px; }
         h1 { text-align: center; margin-bottom: 30px; }
-        
         .top-controls { display: flex; gap: 15px; margin-bottom: 40px; }
         .search-bar { flex-grow: 1; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
         .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; color: white; }
         .btn-export { background-color: #3498db; }
         .btn-import { background-color: #95a5a6; }
-
         .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         .card-wrapper { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
-        
-        /* Fix für einheitliche Logo-Größen */
         .set-card {
             background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px;
             padding: 20px; text-align: center; min-height: 200px;
@@ -25,67 +21,57 @@
             transition: transform 0.2s;
         }
         .set-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
-        .set-card img { 
-            width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; 
-        }
-
+        .set-card img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; }
         .progress-section { margin-top: 10px; font-size: 0.85em; color: #666; }
         .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
         .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.5s; }
         .stats { display: flex; justify-content: space-between; }
-        
         #importFile { display: none; }
     </style>
 </head>
 <body>
-
     <h1>Pokémon Karten Datenbank</h1>
-
     <div class="top-controls">
         <input type="text" id="searchInput" class="search-bar" placeholder="Nach Set suchen...">
         <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
         <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
     </div>
-
     <h2>Englisch GB</h2>
     <div class="set-grid" id="setGrid">
         <a href="kartenliste.html?set=base2" class="card-wrapper" data-name="Base Set 2" data-id="base2" data-total="130">
-            <div class="set-card">
-                <img src="bilder/baseset2.png" alt="Base Set 2">
-                <h3>Base Set 2</h3>
-            </div>
+            <div class="set-card"><img src="bilder/baseset2.png" alt="Base Set 2"><h3>Base Set 2</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
                 <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">0/130</span></div>
             </div>
         </a>
-
         <a href="kartenliste.html?set=ex3" class="card-wrapper" data-name="EX Ruby & Sapphire" data-id="ex3" data-total="109">
-            <div class="set-card">
-                <img src="bilder/exruby.png" alt="EX Ruby & Sapphire">
-                <h3>EX Ruby & Sapphire</h3>
-            </div>
+            <div class="set-card"><img src="bilder/exruby.png" alt="EX Ruby & Sapphire"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex3"></div></div>
                 <div class="stats"><span id="perc-ex3">0%</span><span id="stat-ex3">0/109</span></div>
             </div>
         </a>
-
         <a href="kartenliste.html?set=xy12" class="card-wrapper" data-name="Evolutions" data-id="xy12" data-total="108">
-            <div class="set-card">
-                <img src="bilder/evolutions.png" alt="Evolutions">
-                <h3>Evolutions</h3>
-            </div>
+            <div class="set-card"><img src="bilder/evolutions.png" alt="Evolutions"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
                 <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/108</span></div>
             </div>
         </a>
+        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-name="Celebrations" data-id="cel25" data-total="50">
+            <div class="set-card"><img src="bilder/celebrations.png" alt="Celebrations"><h3>Celebrations</h3></div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
+                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/50</span></div>
+            </div>
+        </a>
     </div>
 
     <script>
+        const API_KEY = "DEIN_API_KEY_HIER"; // WICHTIG: Hier Key eintragen!
+
         function updateProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
                 const setId = set.getAttribute('data-id');
@@ -102,12 +88,26 @@
             });
         }
 
+        // Hintergrund-Laden (Prefetch)
+        async function prefetchData() {
+            const sets = ["base2", "ex3", "xy12", "cel25"];
+            for (const id of sets) {
+                if (!sessionStorage.getItem('data-' + id)) {
+                    fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${id}&orderBy=number`, {
+                        headers: { 'X-Api-Key': API_KEY }
+                    })
+                    .then(res => res.json())
+                    .then(result => sessionStorage.setItem('data-' + id, JSON.stringify(result.data)))
+                    .catch(err => console.error("Prefetch Fehler für " + id, err));
+                }
+            }
+        }
+
+        window.onload = () => { updateProgress(); prefetchData(); };
+
         function exportBackup() {
             const data = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                data[key] = localStorage.getItem(key);
-            }
+            for (let i = 0; i < localStorage.length; i++) { data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); }
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -125,8 +125,6 @@
             };
             reader.readAsText(event.target.files[0]);
         }
-
-        window.onload = updateProgress;
     </script>
 </body>
 </html>
