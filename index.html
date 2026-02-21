@@ -27,114 +27,129 @@
         .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.5s; }
         .stats { display: flex; justify-content: space-between; }
         #importFile { display: none; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <h1>Pokémon Karten Datenbank</h1>
     <div class="top-controls">
-        <input type="text" id="searchInput" class="search-bar" placeholder="Nach Set suchen...">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Nach Set suchen..." onkeyup="filterSets()">
         <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
         <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
     </div>
 
-    <h2>Englisch GB</h2>
+    <h2>Sets</h2>
     <div class="set-grid" id="setGrid">
         <a href="kartenliste.html?set=base1" class="card-wrapper" data-id="base1" data-total="102">
-            <div class="set-card"><img src="bilder/baseset.png" alt="Base Set"><h3>Base Set</h3></div>
+            <div class="set-card"><img src="bilder/base1.png" alt="Base Set"><h3>Base Set</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base1"></div></div>
                 <div class="stats"><span id="perc-base1">0%</span><span id="stat-base1">000/102</span></div>
             </div>
         </a>
-        <a href="kartenliste.html?set=base4" class="card-wrapper" data-id="base2" data-total="130">
-            <div class="set-card"><img src="bilder/baseset2.png" alt="Base Set 2"><h3>Base Set 2</h3></div>
+
+        <a href="kartenliste.html?set=base2" class="card-wrapper" data-id="base4" data-total="130">
+            <div class="set-card"><img src="bilder/base2.png" alt="Base Set 2"><h3>Base Set 2</h3></div>
             <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
-                <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">000/130</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
+                <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">000/130</span></div>
             </div>
         </a>
+
         <a href="kartenliste.html?set=ex3" class="card-wrapper" data-id="ex3" data-total="109">
-            <div class="set-card"><img src="bilder/exruby.png" alt="EX Ruby & Sapphire"><h3>EX Ruby & Sapphire</h3></div>
+            <div class="set-card"><img src="bilder/ex3.png" alt="EX Ruby & Sapphire"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex3"></div></div>
                 <div class="stats"><span id="perc-ex3">0%</span><span id="stat-ex3">000/109</span></div>
             </div>
         </a>
+
         <a href="kartenliste.html?set=xy12" class="card-wrapper" data-id="xy12" data-total="108">
-            <div class="set-card"><img src="bilder/evolutions.png" alt="Evolutions"><h3>Evolutions</h3></div>
+            <div class="set-card"><img src="bilder/xy12.png" alt="Evolutions"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
                 <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/108</span></div>
             </div>
         </a>
-        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="50">
-            <div class="set-card"><img src="bilder/celebrations.png" alt="Celebrations"><h3>Celebrations</h3></div>
+
+        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="25">
+            <div class="set-card"><img src="bilder/cel25.png" alt="Celebrations"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/050</span></div>
+                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/025</span></div>
             </div>
         </a>
     </div>
 
     <script>
-        const API_KEY = "210128f2-1114-47d0-805d-4e9dd5c364dc";
-
         function updateProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
                 const setId = set.getAttribute('data-id');
                 const total = parseInt(set.getAttribute('data-total'));
                 let count = 0;
+                
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
-                    if (key.startsWith(setId + '-') && localStorage.getItem(key) === 'true') count++;
+                    // Sucht nach Schlüsseln, die mit der Set-ID beginnen (z.B. base1-1)
+                    if (key.startsWith(setId + '-') && localStorage.getItem(key) === 'true') {
+                        count++;
+                    }
                 }
-                const percent = Math.round((count / total) * 100);
-                document.getElementById(`fill-${setId}`).style.width = percent + '%';
-                document.getElementById(`perc-${setId}`).innerText = percent + '%';
-                document.getElementById(`stat-${setId}`).innerText = `${String(count).padStart(3, '0')}/${total}`;
+                
+                const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+                
+                // Elemente im DOM aktualisieren
+                const fill = document.getElementById(`fill-${setId}`);
+                const perc = document.getElementById(`perc-${setId}`);
+                const stat = document.getElementById(`stat-${setId}`);
+                
+                if(fill) fill.style.width = percent + '%';
+                if(perc) perc.innerText = percent + '%';
+                if(stat) stat.innerText = `${String(count).padStart(3, '0')}/${total}`;
             });
         }
 
-        async function prefetchData() {
-            const sets = ["base1", "base2", "ex3", "xy12", "cel25"];
-            for (const id of sets) {
-                if (!sessionStorage.getItem('data-' + id)) {
-                    try {
-                        const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${id}&orderBy=number`, {
-                            headers: { 'X-Api-Key': API_KEY }
-                        });
-                        const result = await res.json();
-                        sessionStorage.setItem('data-' + id, JSON.stringify(result.data));
-                    } catch (e) { console.error("Prefetch Fehler für " + id); }
-                }
-            }
+        function filterSets() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.card-wrapper').forEach(card => {
+                const setName = card.querySelector('h3').innerText.toLowerCase();
+                card.classList.toggle('hidden', !setName.includes(query));
+            });
         }
-
-        window.onload = () => { updateProgress(); prefetchData(); };
 
         function exportBackup() {
             const data = {};
-            for (let i = 0; i < localStorage.length; i++) { data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); }
+            for (let i = 0; i < localStorage.length; i++) { 
+                data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); 
+            }
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `pokemon_backup.json`;
+            a.download = `pokemon_sammlung_backup.json`;
             a.click();
         }
 
         function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                const data = JSON.parse(e.target.result);
-                localStorage.clear();
-                for (const key in data) { localStorage.setItem(key, data[key]); }
-                location.reload();
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (confirm("Möchtest du dein Backup laden? Aktuelle Daten werden überschrieben.")) {
+                        localStorage.clear();
+                        for (const key in data) { localStorage.setItem(key, data[key]); }
+                        location.reload();
+                    }
+                } catch (err) {
+                    alert("Fehler beim Lesen der Datei.");
+                }
             };
-            reader.readAsText(event.target.files[0]);
+            reader.readAsText(file);
         }
+
+        window.onload = updateProgress;
     </script>
 </body>
 </html>
-
-
