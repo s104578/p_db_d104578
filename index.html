@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Karten Datenbank</title>
     <style>
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffffff;
-            color: #333;
+       body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #000;
+}
  }
         h1 { text-align: center; margin-bottom: 30px; }
         .top-controls { display: flex; gap: 15px; margin-bottom: 40px; }
@@ -29,17 +31,21 @@
     gap: 30px;
     padding: 20px 0;
 }
-
+    .card-wrapper {
+    text-decoration: none !important; /* Entfernt Unterstreichungen */
+    color: #000 !important;
+    display: block;
+    text-align: center; /* Zentriert Namen und Stats */
+}
 /* Die graue Kachel */
 .set-card-box {
-    background-color: #f2f2f2; /* Hellgrau wie im Bild */
+    background-color: #f2f2f2;
     border-radius: 15px;
     height: 180px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: transform 0.2s ease;
 }
 
 .set-card-box:hover {
@@ -61,7 +67,8 @@
 
 /* Bereich UNTER der Kachel */
 .progress-section {
-    margin-top: 12px;
+    margin-top: 10px;
+    text-align: center;
 }
 
 .progress-bar {
@@ -80,13 +87,18 @@
 
 .stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Zentriert die Stats */
+    gap: 20px; /* Abstand zwischen Prozent und Nummer */
     margin-top: 5px;
-    color: #666;
+    color: #000;
     font-size: 0.85rem;
+    text-decoration: none;
 }
         #importFile { display: none; }
         .hidden { display: none; }
+        .stats span {
+    color: #000 !important;
+}
 
     </style>
 </head>
@@ -219,6 +231,7 @@
     </script>
 </body>
 </html>
+
 
 
 
