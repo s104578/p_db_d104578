@@ -147,11 +147,11 @@
     }
 
     .progress-fill {
-        background-color: #4CAF50;
-        height: 100%;
-        width: 0%;
-        transition: width 0.5s ease;
-    }
+    height: 100%;
+    background-color: #2ecc71; /* Ein schönes Pokémon-Grün */
+    width: 0%; /* Startwert */
+    transition: width 0.5s ease-in-out; /* Macht das Laden des Balkens geschmeidig */
+}
 
     .stats {
         display: flex;
@@ -337,10 +337,11 @@ function updateHomeProgress() {
 }
 
 // Ausführen, sobald die Seite geladen ist
-window.onload = updateHomeProgress;
+window.addEventListener('pageshow', updateHomeProgress);
 </script>
 </body>
 </html>
+
 
 
 
