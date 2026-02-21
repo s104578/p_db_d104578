@@ -3,175 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Set Liste</title>
+    <title>Pokémon Kartenliste</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f9;
             margin: 0;
             padding: 20px;
-            color: #333;
+            display: flex;
+            justify-content: center;
         }
 
         .container {
+            width: 100%;
             max-width: 1000px;
-            margin: 0 auto;
             background: white;
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
         }
 
-        .header-section {
-            text-align: center;
-            margin-bottom: 30px;
+        /* Zurück Button oben links */
+        .back-nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
 
-        #set-logo {
-            max-height: 120px;
-            margin-bottom: 10px;
-        }
-
-        .progress-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .progress-text {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        .progress-bar-bg {
-            background: #e0e0e0;
-            height: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-
-        #search-input {
-            flex-grow: 1;
-            padding: 12px 20px;
-            border: 2px solid #3498db;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .select-all-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .btn-back {
+            text-decoration: none;
+            color: #333;
             background: #eee;
-            padding: 10px 15px;
-            border-radius: 10px;
-            white-space: nowrap;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th {
-            background-color: #3498db;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-
-        .card-img {
-            width: 50px;
-            cursor: zoom-in;
-            transition: transform 0.2s;
-            border-radius: 3px;
-        }
-
-        .card-img:hover {
-            transform: scale(1.1);
-        }
-
-        /* Modal für Zoom */
-        #zoom-modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-        }
-
-        #zoom-modal img {
-            max-height: 90%;
-            max-width: 90%;
-            border-radius: 15px;
-        }
-
-        .checkbox-cell {
-            text-align: center;
-        }
-
-        input[type="checkbox"] {
-            transform: scale(1.5);
-            cursor: pointer;
-        }
-
-        .error-msg {
-            color: #e74c3c;
+            padding: 8px 15px;
+            border-radius: 8px;
             font-weight: bold;
-            text-align: center;
-            padding: 20px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
         }
+
+        .btn-back:hover { background: #ddd; }
+
+        .header-section { text-align: center; margin-bottom: 20px; }
+        #set-logo { max-height: 100px; margin-bottom: 10px; }
+        h1 { margin: 10px 0; font-size: 2rem; color: #333; }
+
+        .progress-container { margin-bottom: 25px; text-align: center; }
+        .progress-bar-bg { background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
+        .progress-bar-fill { background: #4CAF50; height: 100%; width: 0%; transition: width 0.5s; }
+
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        #search-input { flex-grow: 1; padding: 12px; border: 1px solid #3498db; border-radius: 8px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #3498db; color: white; padding: 15px; text-align: center; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
+
+        /* Automatischer Hover-Zoom für Kartenbilder */
+        .img-container { position: relative; width: 50px; margin: 0 auto; }
+        .card-img { 
+            width: 50px; 
+            border-radius: 4px; 
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .card-img:hover { 
+            transform: scale(5); /* Vergrößert das Bild auf das 5-fache */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            position: relative;
+        }
+
+        input[type="checkbox"] { transform: scale(1.5); cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="back-nav">
+        <a href="index.html" class="btn-back">← Zurück</a>
+    </div>
+
     <div class="header-section">
-        <img id="set-logo" src="" alt="Set Logo">
-        <h1 id="set-title">Lade Set...</h1>
+        <img id="set-logo" src="" alt="">
+        <h1 id="set-title">Lade...</h1>
+        <div id="stats-text">0 / 0 Karten gesammelt (0%)</div>
     </div>
 
     <div class="progress-container">
-        <div class="progress-text" id="stats-text">Berechne Fortschritt...</div>
-        <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progress-fill"></div>
-        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
     </div>
 
     <div class="controls">
-        <input type="text" id="search-input" placeholder="Suche (z.B. Glurak oder Nummer)...">
-        <div class="select-all-container">
-            <label for="select-all">Alle wählen:</label>
-            <input type="checkbox" id="select-all">
+        <input type="text" id="search-input" placeholder="Name oder Nummer suchen...">
+        <div style="background:#eee; padding:10px; border-radius:8px; white-space:nowrap;">
+            Alle wählen: <input type="checkbox" id="select-all">
         </div>
     </div>
 
-    <table id="card-table">
+    <table>
         <thead>
             <tr>
                 <th>Bild</th>
@@ -181,13 +113,8 @@
                 <th>Besitz</th>
             </tr>
         </thead>
-        <tbody id="table-body">
-            </tbody>
+        <tbody id="table-body"></tbody>
     </table>
-</div>
-
-<div id="zoom-modal" onclick="this.style.display='none'">
-    <img id="zoomed-img" src="">
 </div>
 
 <script>
@@ -199,21 +126,20 @@
     async function init() {
         if (!setId) return;
 
-        // Setze Logo
         const logo = document.getElementById('set-logo');
         logo.src = `bilder/${setId}.png`;
-        logo.onerror = () => logo.style.display = 'none';
 
         try {
             const response = await fetch(`daten/${setId}.json`);
-            if (!response.ok) throw new Error();
             allCards = await response.json();
             
-            document.getElementById('set-title').innerText = setId.toUpperCase();
+            // Setzt den Namen des Sets (entweder aus der JSON oder der ID)
+            document.getElementById('set-title').innerText = allCards[0]?.setName || setId.toUpperCase();
+            
             renderTable(allCards);
             updateProgress();
         } catch (e) {
-            document.getElementById('table-body').innerHTML = `<tr><td colspan="5" class="error-msg">Fehler beim Laden der Datei: daten/${setId}.json</td></tr>`;
+            document.getElementById('table-body').innerHTML = '<td>Fehler beim Laden.</td>';
         }
     }
 
@@ -228,13 +154,11 @@
             const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
 
             tr.innerHTML = `
-                <td><img src="${imgUrl}" class="card-img" onclick="zoom('${imgUrl}')"></td>
+                <td><div class="img-container"><img src="${imgUrl}" class="card-img"></div></td>
                 <td>${card.n}</td>
                 <td>${card.nameDE || card.name}</td>
-                <td>${card.r || 'Common'}</td>
-                <td class="checkbox-cell">
-                    <input type="checkbox" class="card-check" data-id="${card.id}" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}')">
-                </td>
+                <td>${card.r || '-'}</td>
+                <td><input type="checkbox" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}')"></td>
             `;
             tbody.appendChild(tr);
         });
@@ -242,53 +166,32 @@
 
     function toggleCard(id) {
         let owned = JSON.parse(localStorage.getItem(storageKey)) || [];
-        if (owned.includes(id)) {
-            owned = owned.filter(i => i !== id);
-        } else {
-            owned.push(id);
-        }
+        owned = owned.includes(id) ? owned.filter(i => i !== id) : [...owned, id];
         localStorage.setItem(storageKey, JSON.stringify(owned));
         updateProgress();
     }
 
     function updateProgress() {
         const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
-        const percent = allCards.length ? Math.round((owned.length / allCards.length) * 100) : 0;
-        
+        const percent = Math.round((owned.length / allCards.length) * 100) || 0;
         document.getElementById('progress-fill').style.width = percent + '%';
         document.getElementById('stats-text').innerText = `${owned.length} / ${allCards.length} Karten gesammelt (${percent}%)`;
     }
 
-    // Suchfunktion
-    document.getElementById('search-input').oninput = function(e) {
+    document.getElementById('search-input').oninput = (e) => {
         const term = e.target.value.toLowerCase();
-        const filtered = allCards.filter(c => 
-            c.name.toLowerCase().includes(term) || 
-            (c.nameDE && c.nameDE.toLowerCase().includes(term)) ||
-            c.n.toString().includes(term)
-        );
+        const filtered = allCards.filter(c => (c.nameDE || c.name).toLowerCase().includes(term) || c.n.toString().includes(term));
         renderTable(filtered);
     };
 
-    // Alle auswählen
-    document.getElementById('select-all').onchange = function(e) {
-        let owned = [];
-        if (e.target.checked) {
-            owned = allCards.map(c => c.id);
-        }
+    document.getElementById('select-all').onchange = (e) => {
+        const owned = e.target.checked ? allCards.map(c => c.id) : [];
         localStorage.setItem(storageKey, JSON.stringify(owned));
         renderTable(allCards);
         updateProgress();
     };
 
-    function zoom(url) {
-        const modal = document.getElementById('zoom-modal');
-        document.getElementById('zoomed-img').src = url;
-        modal.style.display = 'flex';
-    }
-
     init();
 </script>
-
 </body>
 </html>
