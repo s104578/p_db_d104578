@@ -96,10 +96,11 @@
 
     /* Kachel-Design */
     .card-wrapper {
-        text-decoration: none !important;
-        color: #000 !important;
-        display: block;
-    }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px; /* Garantiert, dass alle Kacheln gleich hoch sind */
+}
 
     .set-card-box {
         background-color: #f2f2f2;
@@ -116,11 +117,11 @@
         transform: scale(1.03);
     }
 
-    .set-card-box img {
-        max-width: 80%;
-        max-height: 110px;
-        object-fit: contain;
-    }
+   .set-card-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain; /* Sorgt dafür, dass das Bild nicht verzerrt wird */
+}
 
     .set-card-box h3 {
         margin-top: 15px;
@@ -171,53 +172,49 @@
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
     </div>
 
-  <div class="container">
+ <div class="container">
     <h2 class="category-title">Englische & Deutsche Sets</h2>
-   <div class="sets-grid">
+    <div class="sets-grid">
         <a href="kartenliste.html?set=base4&name=Base Set 2" class="card-wrapper" data-id="base4" data-total="130">
             <div class="set-card-box"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
-                <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">000/130</span></div>
+                <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">0/130</span></div>
             </div>
         </a>
+
         <a href="kartenliste.html?set=ex1&name=EX Ruby Sapphire" class="card-wrapper" data-id="ex1" data-total="109">
             <div class="set-card-box"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex1"></div></div>
-                <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">000/109</span></div>
+                <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">0/109</span></div>
             </div>
         </a>
+
         <a href="kartenliste.html?set=xy12&name=Evolutions" class="card-wrapper" data-id="xy12" data-total="113">
             <div class="set-card-box"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
-                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/113</span></div>
+                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/113</span></div>
             </div>
         </a>
+
         <a href="kartenliste.html?set=cel25&name=Celebrations" class="card-wrapper" data-id="cel25" data-total="25">
             <div class="set-card-box"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/25</span></div>
+                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/25</span></div>
             </div>
         </a>
-    </div>
-      <a href="kartenliste.html?set=swsh45&name=Shining Fates" class="card-wrapper" data-id="swsh45" data-total="195">
-    <div class="set-card-box">
-        <img src="bilder/swsh45.png" alt="Shining Fates">
-        <h3>Shining Fates</h3>
-    </div>
-    <div class="progress-section">
-        <div class="progress-bar">
-            <div class="progress-fill" id="fill-swsh45"></div>
-        </div>
-        <div class="stats">
-            <span id="perc-swsh45">0%</span>
-            <span id="stat-swsh45">0/195</span>
-        </div>
-    </div>
-</a>
+
+        <a href="kartenliste.html?set=swsh45&name=Shining Fates" class="card-wrapper" data-id="swsh45" data-total="195">
+            <div class="set-card-box"><img src="bilder/swsh45.png" alt="Shining Fates"><h3>Shining Fates</h3></div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-swsh45"></div></div>
+                <div class="stats"><span id="perc-swsh45">0%</span><span id="stat-swsh45">0/195</span></div>
+            </div>
+        </a>
+    </div> </div> ```
     <h2 class="section-title">Japanische Sets</h2>
     <div class="sets-grid">
         <a href="kartenliste.html?set=sm10b&name=Sky Legends" class="card-wrapper" data-id="sm10b" data-total="69">
@@ -315,6 +312,7 @@
     </script>
 </body>
 </html>
+
 
 
 
