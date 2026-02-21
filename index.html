@@ -39,7 +39,6 @@
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
     </div>
 
-    <h2>Sets</h2>
     <div class="set-grid" id="setGrid">
         <a href="kartenliste.html?set=base1" class="card-wrapper" data-id="base1" data-total="102">
             <div class="set-card"><img src="bilder/base1.png" alt="Base Set"><h3>Base Set</h3></div>
@@ -57,56 +56,32 @@
             </div>
         </a>
 
-        <a href="kartenliste.html?set=ex3" class="card-wrapper" data-id="ex3" data-total="109">
-            <div class="set-card"><img src="bilder/ex3.png" alt="EX Ruby & Sapphire"><h3>EX Ruby & Sapphire</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-ex3"></div></div>
-                <div class="stats"><span id="perc-ex3">0%</span><span id="stat-ex3">000/109</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=xy12" class="card-wrapper" data-id="xy12" data-total="108">
-            <div class="set-card"><img src="bilder/xy12.png" alt="Evolutions"><h3>Evolutions</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
-                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/108</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="25">
-            <div class="set-card"><img src="bilder/cel25.png" alt="Celebrations"><h3>Celebrations</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/025</span></div>
-            </div>
-        </a>
-    </div>
+        </div>
 
     <script>
         function updateProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
-                const setId = set.getAttribute('data-id');
+                const storageId = set.getAttribute('data-id'); // z.B. base4
                 const total = parseInt(set.getAttribute('data-total'));
                 let count = 0;
                 
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
-                    // Sucht nach Schlüsseln, die mit der Set-ID beginnen (z.B. base1-1)
-                    if (key.startsWith(setId + '-') && localStorage.getItem(key) === 'true') {
+                    // Prüft ob die Karte zum Set gehört (z.B. base4-1)
+                    if (key.startsWith(storageId + '-') && localStorage.getItem(key) === 'true') {
                         count++;
                     }
                 }
                 
-                const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+                const percent = Math.round((count / total) * 100) || 0;
                 
-                // Elemente im DOM aktualisieren
-                const fill = document.getElementById(`fill-${setId}`);
-                const perc = document.getElementById(`perc-${setId}`);
-                const stat = document.getElementById(`stat-${setId}`);
-                
-                if(fill) fill.style.width = percent + '%';
-                if(perc) perc.innerText = percent + '%';
-                if(stat) stat.innerText = `${String(count).padStart(3, '0')}/${total}`;
+                // Nutzt die storageId um die richtigen Balken zu finden
+                const fillElement = document.getElementById(`fill-${storageId}`);
+                if (fillElement) {
+                    fillElement.style.width = percent + '%';
+                    document.getElementById(`perc-${storageId}`).innerText = percent + '%';
+                    document.getElementById(`stat-${storageId}`).innerText = `${String(count).padStart(3, '0')}/${total}`;
+                }
             });
         }
 
@@ -118,35 +93,26 @@
             });
         }
 
+        // ... exportBackup und importBackup Funktionen bleiben gleich ...
         function exportBackup() {
             const data = {};
-            for (let i = 0; i < localStorage.length; i++) { 
-                data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); 
-            }
+            for (let i = 0; i < localStorage.length; i++) { data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); }
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `pokemon_sammlung_backup.json`;
+            a.download = `pokemon_backup.json`;
             a.click();
         }
 
         function importBackup(event) {
-            const file = event.target.files[0];
-            if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (confirm("Möchtest du dein Backup laden? Aktuelle Daten werden überschrieben.")) {
-                        localStorage.clear();
-                        for (const key in data) { localStorage.setItem(key, data[key]); }
-                        location.reload();
-                    }
-                } catch (err) {
-                    alert("Fehler beim Lesen der Datei.");
-                }
+                const data = JSON.parse(e.target.result);
+                localStorage.clear();
+                for (const key in data) { localStorage.setItem(key, data[key]); }
+                location.reload();
             };
-            reader.readAsText(file);
+            reader.readAsText(event.target.files[0]);
         }
 
         window.onload = updateProgress;
