@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Karten Datenbank - Listen</title>
+    <title>Pokémon Karten Datenbank</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; text-align: center; background-color: #f4f7f6; }
         .back { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #0078d7; font-weight: bold; float: left; padding: 5px 10px; background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .search-box { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #3498db; border-radius: 10px; font-size: 16px; outline: none; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         th { background-color: #3498db; color: white; padding: 15px; text-align: left; }
-        td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        .card-img { width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; background: #f9f9f9; border-radius: 4px; transition: transform 0.2s; }
-        .card-img:hover { transform: scale(4); position: relative; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; position: relative; }
+
+        /* Zoom-Fix: Kein overflow:hidden mehr an der Tabelle */
+        .card-img { 
+            width: 60px; height: 84px; object-fit: contain; cursor: zoom-in; 
+            background: #f9f9f9; border-radius: 4px; transition: transform 0.25s ease-in-out; 
+            position: relative; z-index: 1; transform-origin: left center;
+        }
+        .card-img:hover { 
+            transform: scale(4.5); z-index: 9999; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
         .owned-row { background-color: #e8f5e9 !important; }
         .hidden { display: none !important; }
-        h1 { color: #2c3e50; margin-top: 20px; }
-        input[type="checkbox"] { transform: scale(1.5); cursor: pointer; }
     </style>
 </head>
 <body>
     <a href="index.html" class="back">← Zurück zur Übersicht</a>
-    <h1 id="setTitle">Wird geladen...</h1>
+    <h1 id="setTitle">Lade Set-Daten...</h1>
     
-    <input type="text" id="searchInput" class="search-box" placeholder="Suche nach Name oder Nummer (z.B. Pikachu oder 025)..." onkeyup="filterTable()">
+    <input type="text" id="searchInput" class="search-box" placeholder="Name oder Nummer suchen..." onkeyup="filterTable()">
 
     <table>
         <thead>
@@ -34,89 +43,44 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const currentSetId = urlParams.get('set') || 'base1';
+        const setId = urlParams.get('set') || 'base1';
 
-        // KOMPLETTE DATENBANK DER SETS
-        const allSetsData = {
-            "base1": {
-                name: "Base Set (102 Karten)",
-                prefix: "base1",
-                total: 102,
-                // Wir generieren die Karten-Logik dynamisch für die gängigsten Karten
-                cards: [
-                    { id: "base1-1", n: "1", name: "Alakazam", r: "Rare Holo" },
-                    { id: "base1-2", n: "2", name: "Blastoise", r: "Rare Holo" },
-                    { id: "base1-3", n: "3", name: "Chansey", r: "Rare Holo" },
-                    { id: "base1-4", n: "4", name: "Charizard", r: "Rare Holo" },
-                    { id: "base1-15", n: "15", name: "Venusaur", r: "Rare Holo" },
-                    { id: "base1-58", n: "58", name: "Pikachu", r: "Common" },
-                    { id: "base1-63", n: "63", name: "Squirtle", r: "Common" }
-                    // Hier kannst du die restlichen Karten nach dem gleichen Muster ergänzen
-                ]
-            },
-            "base2": {
-                name: "Base Set 2 (130 Karten)",
-                prefix: "base2",
-                total: 130,
-                cards: [
-                    { id: "base2-1", n: "1", name: "Alakazam", r: "Rare Holo" },
-                    { id: "base2-4", n: "4", name: "Charizard", r: "Rare Holo" },
-                    { id: "base2-20", n: "20", name: "Mewtwo", r: "Rare Holo" }
-                ]
-            },
-            "ex3": {
-                name: "EX Ruby & Sapphire (109 Karten)",
-                prefix: "ex3",
-                total: 109,
-                cards: [
-                    { id: "ex3-1", n: "1", name: "Aggron", r: "Rare Holo" },
-                    { id: "ex3-100", n: "100", name: "Mewtwo ex", r: "Rare Holo EX" }
-                ]
-            },
-            "xy12": {
-                name: "Evolutions (108 Karten)",
-                prefix: "xy12",
-                total: 108,
-                cards: [
-                    { id: "xy12-11", n: "11", name: "Charizard", r: "Rare Holo" },
-                    { id: "xy12-12", n: "12", name: "M Charizard EX", r: "Rare Holo EX" },
-                    { id: "xy12-35", n: "35", name: "Pikachu", r: "Common" }
-                ]
-            },
-            "cel25": {
-                name: "Celebrations (50 Karten)",
-                prefix: "cel25",
-                total: 50,
-                cards: [
-                    { id: "cel25-1", n: "1", name: "Ho-Oh", r: "Rare Holo" },
-                    { id: "cel25-15", n: "15", name: "Mew", r: "Rare Holo" },
-                    { id: "cel25-25", n: "25", name: "Mew (Shiny)", r: "Rare Secret" }
-                ]
-            }
+        // Mapping für die Anzeigenamen
+        const setNames = {
+            "base1": "Base Set", "base2": "Base Set 2", 
+            "ex3": "EX Ruby & Sapphire", "xy12": "Evolutions", "cel25": "Celebrations"
         };
 
-        function renderTable() {
-            const setData = allSetsData[currentSetId];
-            if (!setData) {
-                document.getElementById('setTitle').innerText = "Set nicht gefunden";
-                return;
+        async function loadSet() {
+            document.getElementById('setTitle').innerText = setNames[setId] || "Unbekanntes Set";
+            
+            try {
+                // Lädt die lokale JSON-Datei aus dem Ordner 'daten'
+                const response = await fetch(`./daten/${setId}.json`);
+                if (!response.ok) throw new Error("Datei nicht gefunden");
+                const cards = await response.json();
+                renderTable(cards);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Fehler: Die Datei daten/${setId}.json konnte nicht geladen werden.</td></tr>`;
             }
+        }
 
-            document.getElementById('setTitle').innerText = setData.name;
+        function renderTable(cards) {
             const body = document.getElementById('tableBody');
             body.innerHTML = '';
 
-            setData.cards.forEach(card => {
+            cards.forEach(card => {
                 const isOwned = localStorage.getItem(card.id) === 'true';
                 const row = document.createElement('tr');
                 if(isOwned) row.classList.add('owned-row');
                 
-                // Wir generieren die Bild-URL automatisch anhand der ID
-                const imgUrl = `https://images.pokemontcg.io/${setData.prefix}/${card.n}.png`;
+                // Bild-URL bleibt dynamisch von der TCG-API (Bilder werden meist nicht blockiert)
+                const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
                 
                 row.setAttribute('data-search', (card.name + " " + card.n).toLowerCase());
                 row.innerHTML = `
-                    <td><img src="${imgUrl}" class="card-img" alt="${card.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x84?text=TCG'"></td>
+                    <td><img src="${imgUrl}" class="card-img" loading="lazy"></td>
                     <td>${card.n}</td>
                     <td><strong>${card.name}</strong></td>
                     <td>${card.r}</td>
@@ -138,7 +102,7 @@
             });
         }
 
-        window.onload = renderTable;
+        window.onload = loadSet;
     </script>
 </body>
 </html>
