@@ -78,7 +78,7 @@
     </div>
 
     <div class="controls">
-        <input type="text" id="searchInput" class="search-box" placeholder="Suche..." onkeyup="filterTable()">
+        <input type="text" id="searchInput" class="search-box" placeholder="Suche (z.B. Glurak)..." onkeyup="filterTable()">
         <div class="select-all-area">
             <label for="selectAll">Alle wählen:</label>
             <input type="checkbox" id="selectAll" onchange="toggleAll(this)">
@@ -108,36 +108,46 @@
         async function loadSetData() {
             document.getElementById('setTitle').innerText = setNames[setId] || "Pokémon Set";
             
-            // Pfad geändert auf ./bilder/SETID.png
+            // Lokales Logo laden
             document.getElementById('setLogoImg').src = `./bilder/${setId}.png`;
-            
-            document.getElementById('setLogoImg').onerror = function() {
-                this.style.display = 'none';
-            };
+            document.getElementById('setLogoImg').onerror = function() { this.style.display = 'none'; };
             
             try {
+                // Wir laden die Datei basierend auf der URL (z.B. base2.json)
                 const response = await fetch(`./daten/${setId}.json`);
+                if (!response.ok) throw new Error("Datei nicht gefunden");
                 allCards = await response.json();
                 renderTable();
                 updateProgress();
             } catch (err) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5">Fehler beim Laden.</td></tr>`;
+                console.error(err);
+                document.getElementById('tableBody').innerHTML = `<tr><td colspan="5" style="padding:20px; color:red;">Fehler beim Laden der Datei: daten/${setId}.json</td></tr>`;
             }
         }
 
         function renderTable() {
             const body = document.getElementById('tableBody');
             body.innerHTML = '';
+
+            // WICHTIG: Die Weiche für Base Set 2 Bilder (API braucht base4 statt base2)
+            const apiSetId = setId === 'base2' ? 'base4' : setId;
+
             allCards.forEach(card => {
                 const isOwned = localStorage.getItem(card.id) === 'true';
                 const row = document.createElement('tr');
                 if(isOwned) row.classList.add('owned-row');
-                const imgUrl = `https://images.pokemontcg.io/${setId}/${card.n}.png`;
+                
+                // Bild-URL nutzt die korrigierte apiSetId
+                const imgUrl = `https://images.pokemontcg.io/${apiSetId}/${card.n}.png`;
+                
                 row.setAttribute('data-search', `${card.name} ${card.nameDE || ''} ${card.n}`.toLowerCase());
                 row.innerHTML = `
                     <td><img src="${imgUrl}" class="card-img" loading="lazy"></td>
                     <td><b>${card.n}</b></td>
-                    <td><span class="name-de">${card.nameDE || card.name}</span><span class="name-en">(${card.name})</span></td>
+                    <td>
+                        <span class="name-de">${card.nameDE || card.name}</span>
+                        <span class="name-en">(${card.name})</span>
+                    </td>
                     <td><small>${card.r}</small></td>
                     <td><input type="checkbox" class="card-check" data-id="${card.id}" ${isOwned ? 'checked' : ''} onchange="toggleCard('${card.id}', this)"></td>
                 `;
@@ -168,7 +178,7 @@
             const owned = allCards.filter(card => localStorage.getItem(card.id) === 'true').length;
             const percent = Math.round((owned / allCards.length) * 100);
             document.getElementById('progressBar').style.width = percent + "%";
-            document.getElementById('progressText').innerText = `${owned} / ${allCards.length} Karten (${percent}%)`;
+            document.getElementById('progressText').innerText = `${owned} / ${allCards.length} Karten gesammelt (${percent}%)`;
         }
 
         function filterTable() {
