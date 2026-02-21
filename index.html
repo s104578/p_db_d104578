@@ -12,7 +12,7 @@
         .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; color: white; }
         .btn-export { background-color: #3498db; }
         .btn-import { background-color: #95a5a6; }
-        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .card-wrapper { text-decoration: none; color: inherit; display: flex; flex-direction: column; }
         .set-card {
             background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px;
@@ -21,7 +21,7 @@
             transition: transform 0.2s;
         }
         .set-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .set-card img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; }
+        .set-card img { width: 100%; height: 100px; object-fit: contain; margin-bottom: 15px; }
         .progress-section { margin-top: 10px; font-size: 0.85em; color: #666; }
         .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
         .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: width 0.5s; }
@@ -37,6 +37,7 @@
         <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
         <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
     </div>
+
     <h2>Englisch GB</h2>
     <div class="set-grid" id="setGrid">
         <a href="kartenliste.html?set=base2" class="card-wrapper" data-name="Base Set 2" data-id="base2" data-total="130">
@@ -64,13 +65,13 @@
             <div class="set-card"><img src="bilder/celebrations.png" alt="Celebrations"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/50</span></div>
+                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/050</span></div>
             </div>
         </a>
     </div>
 
     <script>
-        const API_KEY = "DEIN_API_KEY_HIER"; // WICHTIG: Hier Key eintragen!
+        const API_KEY = "210128f2-1114-47d0-805d-4e9dd5c364dc";
 
         function updateProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
@@ -84,21 +85,21 @@
                 const percent = Math.round((count / total) * 100);
                 document.getElementById(`fill-${setId}`).style.width = percent + '%';
                 document.getElementById(`perc-${setId}`).innerText = percent + '%';
-                document.getElementById(`stat-${setId}`).innerText = `${count}/${total}`;
+                document.getElementById(`stat-${setId}`).innerText = `${String(count).padStart(3, '0')}/${total}`;
             });
         }
 
-        // Hintergrund-Laden (Prefetch)
         async function prefetchData() {
             const sets = ["base2", "ex3", "xy12", "cel25"];
             for (const id of sets) {
                 if (!sessionStorage.getItem('data-' + id)) {
-                    fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${id}&orderBy=number`, {
-                        headers: { 'X-Api-Key': API_KEY }
-                    })
-                    .then(res => res.json())
-                    .then(result => sessionStorage.setItem('data-' + id, JSON.stringify(result.data)))
-                    .catch(err => console.error("Prefetch Fehler für " + id, err));
+                    try {
+                        const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=set.id:${id}&orderBy=number`, {
+                            headers: { 'X-Api-Key': API_KEY }
+                        });
+                        const result = await res.json();
+                        sessionStorage.setItem('data-' + id, JSON.stringify(result.data));
+                    } catch (e) { console.error("Fehler beim Vorladen von " + id); }
                 }
             }
         }
