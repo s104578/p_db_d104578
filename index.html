@@ -11,7 +11,11 @@
     color: #000;
 }
  }
-        h1 { text-align: center; margin-bottom: 30px; }
+        h1, .section-title {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
         /* Zentriert den gesamten Inhalt der Seite */
         .container {
     max-width: 1200px; /* Breite von 4 Kacheln + Gaps */
@@ -23,6 +27,13 @@
 }
         .top-controls { display: flex; gap: 15px; margin-bottom: 40px; }
         .search-bar { flex-grow: 1; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .search-wrapper {
+    width: 100%;
+    max-width: 1200px; 
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
         /* Suchleiste auf die Breite von 4 Kacheln begrenzen */
 .search-container {
     width: 100%;
@@ -36,7 +47,7 @@
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     text-align: center; /* Text in der Suche mittig */
 }
         .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; color: white; }
@@ -52,13 +63,16 @@
 
     .sets-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Fest auf 4 Spalten für die Suche-Optik */
-    gap: 20px;
+    /* Erzwingt 4 gleich große Spalten */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 25px;
     width: 100%;
+    margin-bottom: 60px;
 }
-    .card-wrapper {
+   .card-wrapper {
     text-decoration: none !important;
     color: #000 !important;
+    display: block;
 }
 /* Die graue Kachel */
 .set-card-box {
@@ -168,7 +182,7 @@
             </div>
         </a>
     </div>
-  <div class="container">
+      
     <h2 class="section-title">Japanische Sets</h2>
     <div class="sets-grid">
         <a href="kartenliste.html?set=sm10b" class="card-wrapper" data-id="sm10b" data-total="69">
@@ -256,6 +270,7 @@
     </script>
 </body>
 </html>
+
 
 
 
