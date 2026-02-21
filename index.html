@@ -303,7 +303,7 @@
 
         window.onload = updateProgress;
     </script>
-    <script>
+   <script>
 function updateHomeProgress() {
     // Alle Kacheln (card-wrapper) finden
     const sets = document.querySelectorAll('.card-wrapper');
@@ -312,20 +312,22 @@ function updateHomeProgress() {
         const setId = set.getAttribute('data-id');
         const totalCards = parseInt(set.getAttribute('data-total'));
         
-        // Die gespeicherten Daten aus dem localStorage holen
-        const savedData = localStorage.getItem('pokemon_collection_' + setId);
+        // WICHTIG: Hier nutzen wir jetzt den exakt gleichen Namen wie in der Kartenliste
+        const storageKey = `owned_${setId}`;
+        const savedData = localStorage.getItem(storageKey);
+        
         let collectedCount = 0;
 
         if (savedData) {
-            const collectedCards = JSON.parse(savedData);
-            // Wir zählen nur die Einträge, die auf 'true' stehen
-            collectedCount = Object.values(collectedCards).filter(status => status === true).length;
+            // Da du eine Liste (Array) speicherst, zählen wir einfach die Länge des Arrays
+            const ownedCards = JSON.parse(savedData);
+            collectedCount = ownedCards.length;
         }
 
         // Prozent berechnen
         const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
 
-        // Die Elemente in dieser speziellen Kachel finden und updaten
+        // Die Elemente in der Kachel updaten
         const fillBar = document.getElementById('fill-' + setId);
         const percText = document.getElementById('perc-' + setId);
         const statText = document.getElementById('stat-' + setId);
@@ -333,16 +335,24 @@ function updateHomeProgress() {
         if (fillBar) fillBar.style.width = percent + '%';
         if (percText) percText.textContent = percent + '%';
         if (statText) statText.textContent = collectedCount + '/' + totalCards;
+
+        // --- Ausgrauen Logik ---
+        if (collectedCount === 0) {
+            set.classList.add('set-locked');
+        } else {
+            set.classList.remove('set-locked');
+        }
     });
 }
 
-// Das hier stellt sicher, dass JEDES MAL wenn die Seite sichtbar wird, neu gerechnet wird
-window.addEventListener('pageshow', function() {
-    updateHomeProgress();
-});
+// Jedes Mal ausführen, wenn die Seite angezeigt wird
+window.addEventListener('pageshow', updateHomeProgress);
+// Auch beim ersten Laden ausführen
+window.addEventListener('DOMContentLoaded', updateHomeProgress);
 </script>
 </body>
 </html>
+
 
 
 
