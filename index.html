@@ -336,11 +336,14 @@ function updateHomeProgress() {
     });
 }
 
-// Ausführen, sobald die Seite geladen ist
-window.addEventListener('pageshow', updateHomeProgress);
+// Das hier stellt sicher, dass JEDES MAL wenn die Seite sichtbar wird, neu gerechnet wird
+window.addEventListener('pageshow', function() {
+    updateHomeProgress();
+});
 </script>
 </body>
 </html>
+
 
 
 
