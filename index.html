@@ -303,8 +303,45 @@
 
         window.onload = updateProgress;
     </script>
+    <script>
+function updateHomeProgress() {
+    // Alle Kacheln (card-wrapper) finden
+    const sets = document.querySelectorAll('.card-wrapper');
+
+    sets.forEach(set => {
+        const setId = set.getAttribute('data-id');
+        const totalCards = parseInt(set.getAttribute('data-total'));
+        
+        // Die gespeicherten Daten aus dem localStorage holen
+        const savedData = localStorage.getItem('pokemon_collection_' + setId);
+        let collectedCount = 0;
+
+        if (savedData) {
+            const collectedCards = JSON.parse(savedData);
+            // Wir zählen nur die Einträge, die auf 'true' stehen
+            collectedCount = Object.values(collectedCards).filter(status => status === true).length;
+        }
+
+        // Prozent berechnen
+        const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
+
+        // Die Elemente in dieser speziellen Kachel finden und updaten
+        const fillBar = document.getElementById('fill-' + setId);
+        const percText = document.getElementById('perc-' + setId);
+        const statText = document.getElementById('stat-' + setId);
+
+        if (fillBar) fillBar.style.width = percent + '%';
+        if (percText) percText.textContent = percent + '%';
+        if (statText) statText.textContent = collectedCount + '/' + totalCards;
+    });
+}
+
+// Ausführen, sobald die Seite geladen ist
+window.onload = updateHomeProgress;
+</script>
 </body>
 </html>
+
 
 
 
