@@ -19,85 +19,84 @@
         .btn-export { background-color: #3498db; }
         .btn-import { background-color: #95a5a6; }
         /* Überschriften-Stil */
-        .section-title {
+       .section-title {
         font-size: 1.5rem;
         font-weight: bold;
         margin: 40px 0 20px 0;
         color: #000;
     }
-         .set-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
 
-        .card-wrapper {
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            color: inherit;
-        }
+    .sets-grid {
+        display: grid;
+        /* Rechteckiges Querformat */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        gap: 25px;
+        margin-bottom: 50px;
+    }
 
-        .card-wrapper:hover {
+    /* Die Kachel selbst (Hellgrau) */
+    .card-wrapper {
+        text-decoration: none;
+        display: block; /* Block-Layout für Stapelung */
+        transition: transform 0.2s;
+    }
+
+    .card-wrapper:hover {
         transform: translateY(-5px);
     }
 
-    .set-card {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 220px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+    .set-card-box {
+        background-color: #f8f9fa; /* Das leichte Grau aus dem Bild */
+        border-radius: 12px;
+        aspect-ratio: 16 / 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        border: 1px solid #eee; /* Ganz feine Trennung */
+    }
 
-    .set-card img {
-        width: 100%;
-        max-height: 110px;
+    .set-card-box img {
+        width: 80%;
+        max-height: 100px;
         object-fit: contain;
     }
 
-    .set-card h3 {
-        color: #000; /* Schwarze Schrift */
+    .set-card-box h3 {
+        color: #000;
         font-size: 1.1rem;
-        text-align: center;
-        margin: 15px 0 0 0;
-        font-weight: 500;
-        font-family: sans-serif;
+        margin-top: 15px;
+        font-weight: 600;
     }
-        .progress-section {
-            margin-top: 10px;
-            padding: 0 5px;
-        }
 
-        .progress-bar {
-            height: 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 5px;
-        }
+    /* Statistiken unterhalb der Kachel */
+    .progress-section {
+        margin-top: 10px;
+        padding: 0 5px;
+    }
 
-        .progress-fill {
-            height: 100%;
-            background-color: #2ecc71;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
+    .progress-bar {
+        background: #eee;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+    }
 
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85em;
-            color: #6c757d;
-        }
+    .progress-fill {
+        background: #ccc; /* Neutrales Grau für 0% wie im Bild */
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
 
+    .stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: #888;
+        margin-top: 4px;
+    }
         #importFile { display: none; }
         .hidden { display: none; }
 
@@ -116,28 +115,28 @@
     <h2 class="category-title">Englische & Deutsche Sets</h2>
    <div class="sets-grid">
         <a href="kartenliste.html?set=base4" class="card-wrapper" data-id="base4" data-total="130">
-            <div class="set-card"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
+            <div class="set-card-box"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
                 <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">000/130</span></div>
             </div>
         </a>
         <a href="kartenliste.html?set=ex1" class="card-wrapper" data-id="ex1" data-total="109">
-            <div class="set-card"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
+            <div class="set-card-box"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex1"></div></div>
                 <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">000/109</span></div>
             </div>
         </a>
         <a href="kartenliste.html?set=xy12" class="card-wrapper" data-id="xy12" data-total="113">
-            <div class="set-card"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
+            <div class="set-card-box"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
                 <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/113</span></div>
             </div>
         </a>
         <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="25">
-            <div class="set-card"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
+            <div class="set-card-box"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
                 <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/25</span></div>
@@ -148,22 +147,22 @@
     <h2 class="section-title">Japanische Sets</h2>
     <div class="sets-grid">
         <a href="kartenliste.html?set=sm10b" class="card-wrapper" data-id="sm10b" data-total="69">
-            <div class="set-card"><img src="bilder/sm10b.png"><h3>Sky Legends</h3></div>
+            <div class="set-card-box"><img src="bilder/sm10b.png"><h3>Sky Legends</h3></div>
             <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm10b"></div></div>
             <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">0/69</span></div></div>
         </a>
         <a href="kartenliste.html?set=sm11" class="card-wrapper" data-id="sm11" data-total="115">
-            <div class="set-card"><img src="bilder/sm11.png"><h3>Miracle Twins</h3></div>
+            <div class="set-card-box"><img src="bilder/sm11.png"><h3>Miracle Twins</h3></div>
             <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11"></div></div>
             <div class="stats"><span id="perc-sm11">0%</span><span id="stat-sm11">0/115</span></div></div>
         </a>
         <a href="kartenliste.html?set=sm11a" class="card-wrapper" data-id="sm11a" data-total="80">
-            <div class="set-card"><img src="bilder/sm11a.png"><h3>Remix Bout</h3></div>
+            <div class="set-card-box"><img src="bilder/sm11a.png"><h3>Remix Bout</h3></div>
             <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11a"></div></div>
             <div class="stats"><span id="perc-sm11a">0%</span><span id="stat-sm11a">0/80</span></div></div>
         </a>
         <a href="kartenliste.html?set=smp2" class="card-wrapper" data-id="smp2" data-total="24">
-            <div class="set-card"><img src="bilder/smp2.png"><h3>Det. Pikachu</h3></div>
+            <div class="set-card-box"><img src="bilder/smp2.png"><h3>Det. Pikachu</h3></div>
             <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-smp2"></div></div>
             <div class="stats"><span id="perc-smp2">0%</span><span id="stat-smp2">0/24</span></div></div>
         </a>
@@ -232,6 +231,7 @@
     </script>
 </body>
 </html>
+
 
 
 
