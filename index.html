@@ -40,32 +40,39 @@
 
     <h2>Englisch GB</h2>
     <div class="set-grid" id="setGrid">
-        <a href="kartenliste.html?set=base2" class="card-wrapper" data-name="Base Set 2" data-id="base2" data-total="130">
+        <a href="kartenliste.html?set=base1" class="card-wrapper" data-id="base1" data-total="102">
+            <div class="set-card"><img src="bilder/baseset.png" alt="Base Set"><h3>Base Set</h3></div>
+            <div class="progress-section">
+                <div class="progress-bar"><div class="progress-fill" id="fill-base1"></div></div>
+                <div class="stats"><span id="perc-base1">0%</span><span id="stat-base1">000/102</span></div>
+            </div>
+        </a>
+        <a href="kartenliste.html?set=base2" class="card-wrapper" data-id="base2" data-total="130">
             <div class="set-card"><img src="bilder/baseset2.png" alt="Base Set 2"><h3>Base Set 2</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
-                <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">0/130</span></div>
+                <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">000/130</span></div>
             </div>
         </a>
-        <a href="kartenliste.html?set=ex3" class="card-wrapper" data-name="EX Ruby & Sapphire" data-id="ex3" data-total="109">
+        <a href="kartenliste.html?set=ex3" class="card-wrapper" data-id="ex3" data-total="109">
             <div class="set-card"><img src="bilder/exruby.png" alt="EX Ruby & Sapphire"><h3>EX Ruby & Sapphire</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-ex3"></div></div>
-                <div class="stats"><span id="perc-ex3">0%</span><span id="stat-ex3">0/109</span></div>
+                <div class="stats"><span id="perc-ex3">0%</span><span id="stat-ex3">000/109</span></div>
             </div>
         </a>
-        <a href="kartenliste.html?set=xy12" class="card-wrapper" data-name="Evolutions" data-id="xy12" data-total="108">
+        <a href="kartenliste.html?set=xy12" class="card-wrapper" data-id="xy12" data-total="108">
             <div class="set-card"><img src="bilder/evolutions.png" alt="Evolutions"><h3>Evolutions</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
-                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/108</span></div>
+                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">000/108</span></div>
             </div>
         </a>
-        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-name="Celebrations" data-id="cel25" data-total="50">
+        <a href="kartenliste.html?set=cel25" class="card-wrapper" data-id="cel25" data-total="50">
             <div class="set-card"><img src="bilder/celebrations.png" alt="Celebrations"><h3>Celebrations</h3></div>
             <div class="progress-section">
                 <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/050</span></div>
+                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">000/050</span></div>
             </div>
         </a>
     </div>
@@ -90,7 +97,7 @@
         }
 
         async function prefetchData() {
-            const sets = ["base2", "ex3", "xy12", "cel25"];
+            const sets = ["base1", "base2", "ex3", "xy12", "cel25"];
             for (const id of sets) {
                 if (!sessionStorage.getItem('data-' + id)) {
                     try {
@@ -99,7 +106,7 @@
                         });
                         const result = await res.json();
                         sessionStorage.setItem('data-' + id, JSON.stringify(result.data));
-                    } catch (e) { console.error("Fehler beim Vorladen von " + id); }
+                    } catch (e) { console.error("Prefetch Fehler für " + id); }
                 }
             }
         }
