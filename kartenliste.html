@@ -198,27 +198,29 @@
         }
     }
 
-    function renderTable(cards) {
+   function renderTable(cards) {
         const tbody = document.getElementById('table-body');
         const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
         
         tbody.innerHTML = cards.map(card => {
-            // Wir nutzen hier die universelle Funktion für das Kartenbild
             const apiImgUrl = getCardImageUrl(card.id);
+            
+            // Hier wird nach 'rarity' ODER 'r' gesucht
+            const rarityDisplay = card.rarity || card.r || '-';
             
             return `
                 <tr>
                     <td>
-    <img src="${apiImgUrl}" 
-         class="card-img" 
-         loading="lazy" 
-         style="cursor: pointer;" 
-         onclick="openModal('${apiImgUrl}')" 
-         onerror="this.src='bilder/placeholder.png'">
-</td>
+                        <img src="${apiImgUrl}" 
+                             class="card-img" 
+                             loading="lazy" 
+                             style="cursor: pointer;" 
+                             onclick="openModal('${apiImgUrl}')" 
+                             onerror="this.src='bilder/placeholder.png'">
+                    </td>
                     <td>${card.n}</td>
                     <td>${card.nameDE || card.name}</td>
-                    <td>${card.r || '-'}</td>
+                    <td>${rarityDisplay}</td> 
                     <td><input type="checkbox" ${owned.includes(card.id) ? 'checked' : ''} onchange="toggleCard('${card.id}')"></td>
                 </tr>
             `;
@@ -298,6 +300,7 @@ function scrollToTop() {
 </div>
 </body>
 </html>
+
 
 
 
