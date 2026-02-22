@@ -99,6 +99,8 @@
 
     /* Kachel-Design */
     .card-wrapper {
+        transition: filter 0.5s ease, transform 0.3s ease;
+        filter: grayscale(0%); /* Standardmäßig farbig */
         text-decoration: none !important;
         color: #000 !important;
         display: block;
@@ -131,6 +133,14 @@
         font-weight: 600;
         text-align: center;
     }
+    /* Stil für unentdeckte Sets (Grau) */
+    .set-locked {
+    filter: grayscale(100%) opacity(0.7);
+    }
+    /* Wenn man mit der Maus drüberfährt, soll es kurz farbig werden (optional) */
+    .set-locked:hover {
+    filter: grayscale(40%) opacity(1);
+}
 
     /* Fortschritt unter der Kachel */
     .progress-section {
@@ -304,54 +314,60 @@
         window.onload = updateProgress;
     </script>
    <script>
+<script>
 function updateHomeProgress() {
-    // Alle Kacheln (card-wrapper) finden
+    // Alle Kacheln auf der Startseite finden
     const sets = document.querySelectorAll('.card-wrapper');
 
     sets.forEach(set => {
         const setId = set.getAttribute('data-id');
         const totalCards = parseInt(set.getAttribute('data-total'));
         
-        // WICHTIG: Hier nutzen wir jetzt den exakt gleichen Namen wie in der Kartenliste
+        // Den richtigen Speicher-Schlüssel aus der kartenliste.html nutzen
         const storageKey = `owned_${setId}`;
         const savedData = localStorage.getItem(storageKey);
         
         let collectedCount = 0;
 
         if (savedData) {
-            // Da du eine Liste (Array) speicherst, zählen wir einfach die Länge des Arrays
+            // Deine Liste speichert ein Array der IDs, also zählen wir dessen Länge
             const ownedCards = JSON.parse(savedData);
             collectedCount = ownedCards.length;
         }
 
-        // Prozent berechnen
-        const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
-
-        // Die Elemente in der Kachel updaten
-        const fillBar = document.getElementById('fill-' + setId);
-        const percText = document.getElementById('perc-' + setId);
-        const statText = document.getElementById('stat-' + setId);
-
-        if (fillBar) fillBar.style.width = percent + '%';
-        if (percText) percText.textContent = percent + '%';
-        if (statText) statText.textContent = collectedCount + '/' + totalCards;
-
-        // --- Ausgrauen Logik ---
+        // --- LOGIK: AUSGRAUEN ---
+        // Wenn 0 Karten gesammelt wurden, Klasse hinzufügen, sonst entfernen
         if (collectedCount === 0) {
             set.classList.add('set-locked');
         } else {
             set.classList.remove('set-locked');
         }
+
+        // --- LOGIK: FORTSCHRITT ---
+        const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
+
+        // IDs der HTML-Elemente in der Kachel ansteuern
+        const fillBar = document.getElementById('fill-' + setId);
+        const percText = document.getElementById('perc-' + setId);
+        const statText = document.getElementById('stat-' + setId);
+
+        // Nur updaten, wenn die Elemente im HTML auch existieren
+        if (fillBar) fillBar.style.width = percent + '%';
+        if (percText) percText.textContent = percent + '%';
+        if (statText) statText.textContent = collectedCount + '/' + totalCards;
     });
 }
 
-// Jedes Mal ausführen, wenn die Seite angezeigt wird
-window.addEventListener('pageshow', updateHomeProgress);
-// Auch beim ersten Laden ausführen
+// Stellt sicher, dass das Script beim ersten Laden läuft
 window.addEventListener('DOMContentLoaded', updateHomeProgress);
+
+// Stellt sicher, dass das Script läuft, wenn man vom Set-Fenster zurückkehrt
+window.addEventListener('pageshow', updateHomeProgress);
+</script>
 </script>
 </body>
 </html>
+
 
 
 
