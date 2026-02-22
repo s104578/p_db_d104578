@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Karten Datenbank</title>
-    <link rel="icon" type="image/png" href="hyperball.png">
     <style>
         :root {
             --bg-color: #ffffff;
@@ -232,19 +231,12 @@
         <h1>Pokémon Karten Datenbank</h1>
         
         <div class="top-controls">
-    <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
-    
-    <div class="button-group">
-        <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
-        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
-    </div>
-    </div>
-<div id="card-search-results" style="display:none; width:100%; max-width:800px; margin-bottom:20px;">
-    <h3 class="section-title">Gefundene Karten</h3>
-    <table style="width:100%; background:var(--card-bg); border-radius:10px; padding:10px;">
-        <tbody id="card-results-body"></tbody>
-    </tbody>
-</div>
+            <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
+            
+            <div class="button-group">
+                <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
+                <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
+            </div>
 
             <div class="filter-group" style="margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #7f8c8d; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('all')">Alle</button>
@@ -674,86 +666,6 @@ function scrollToTop() {
 }
         // Wichtig: Update auch wenn man per "Zurück"-Button kommt
         window.addEventListener('pageshow', updateHomeProgress);
-
-    // 1. Scroll-Position beim Verlassen speichern
-  window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('scrollPosition', window.scrollY);
-  });
-
-  // 2. Scroll-Position beim Laden wiederherstellen
-  window.addEventListener('load', () => {
-    const scrollPos = sessionStorage.getItem('scrollPosition');
-    if (scrollPos) {
-      // Kleiner Timeout, damit der Browser Zeit hat, alle Elemente zu rendern
-      setTimeout(() => {
-        window.scrollTo({
-          top: parseInt(scrollPos),
-          behavior: 'smooth' // Sorgt für ein schönes Gleiten zur alten Position
-        });
-      }, 100); 
-    }
-  });
-       
-// INITIALISIERUNG BEIM LADEN
-        window.addEventListener('DOMContentLoaded', () => {
-            initDarkMode();
-            updateHomeProgress();
-        });
-
-        // Überwacht das Scroll-Verhalten für den Back-to-Top Button
-        window.onscroll = function() {
-            const btn = document.getElementById("backToTop");
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                btn.style.display = "flex";
-            } else {
-                btn.style.display = "none";
-            }
-        };
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.addEventListener('pageshow', updateHomeProgress);
-
-        // Scroll-Position speichern und wiederherstellen
-        window.addEventListener('beforeunload', () => {
-            sessionStorage.setItem('scrollPosition', window.scrollY);
-        });
-
-        window.addEventListener('load', () => {
-            const scrollPos = sessionStorage.getItem('scrollPosition');
-            if (scrollPos) {
-                setTimeout(() => {
-                    window.scrollTo({ top: parseInt(scrollPos), behavior: 'smooth' });
-                }, 100); 
-            }
-        });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
