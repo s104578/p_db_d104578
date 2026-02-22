@@ -131,7 +131,16 @@
         font-weight: 600;
         text-align: center;
     }
+/* Erweitere dein CSS um diese Zeilen */
+    .card-wrapper.set-locked {
+    filter: grayscale(100%) opacity(0.6) !important;
+}
 
+    .card-wrapper.set-locked:hover {
+    filter: grayscale(30%) opacity(1) !important;
+}
+
+    .hidden { display: none !important; }
     /* Fortschritt unter der Kachel */
     .progress-section {
         margin-top: 12px;
@@ -242,118 +251,90 @@
     </div>
 </div>
 </body>
-    <script>
-        function updateProgress() {
-            document.querySelectorAll('.card-wrapper').forEach(set => {
-                const storageId = set.getAttribute('data-id');
-                const total = parseInt(set.getAttribute('data-total'));
-                let count = 0;
-                
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith(storageId + '-') && localStorage.getItem(key) === 'true') {
-                        count++;
-                    }
-                }
-                
-                const percent = Math.round((count / total) * 100) || 0;
-                
-                const fillElement = document.getElementById(`fill-${storageId}`);
-                const percElement = document.getElementById(`perc-${storageId}`);
-                const statElement = document.getElementById(`stat-${storageId}`);
-
-                if (fillElement) fillElement.style.width = percent + '%';
-                if (percElement) percElement.innerText = percent + '%';
-                if (statElement) statElement.innerText = `${String(count).padStart(3, '0')}/${total}`;
-            });
-        }
-
-        function filterSets() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.card-wrapper').forEach(card => {
-                const setName = card.querySelector('h3').innerText.toLowerCase();
-                card.classList.toggle('hidden', !setName.includes(query));
-            });
-        }
-
-        function exportBackup() {
-            const data = {};
-            for (let i = 0; i < localStorage.length; i++) { 
-                data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); 
-            }
-            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `pokemon_backup.json`;
-            a.click();
-        }
-
-        function importBackup(event) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    localStorage.clear();
-                    for (const key in data) { localStorage.setItem(key, data[key]); }
-                    location.reload();
-                } catch(err) { alert("Fehler beim Import!"); }
-            };
-            reader.readAsText(event.target.files[0]);
-        }
-
-        window.onload = updateProgress;
-    </script>
    <script>
-<script>
-function updateHomeProgress() {
-    // Alle Kacheln (card-wrapper) finden
-    const sets = document.querySelectorAll('.card-wrapper');
+    // Diese Funktion berechnet den Fortschritt basierend auf deiner kartenliste.html
+    function updateHomeProgress() {
+        const sets = document.querySelectorAll('.card-wrapper');
 
-    sets.forEach(set => {
-        const setId = set.getAttribute('data-id');
-        const totalCards = parseInt(set.getAttribute('data-total'));
-        
-        // WICHTIG: Hier nutzen wir jetzt den exakt gleichen Namen wie in der Kartenliste
-        const storageKey = `owned_${setId}`;
-        const savedData = localStorage.getItem(storageKey);
-        
-        let collectedCount = 0;
+        sets.forEach(set => {
+            const setId = set.getAttribute('data-id');
+            const totalCards = parseInt(set.getAttribute('data-total'));
+            
+            // Nutzt den korrekten Key aus der kartenliste.html: owned_ID
+            const storageKey = `owned_${setId}`;
+            const savedData = localStorage.getItem(storageKey);
+            
+            let collectedCount = 0;
+            if (savedData) {
+                const ownedCards = JSON.parse(savedData);
+                collectedCount = ownedCards.length;
+            }
 
-        if (savedData) {
-            // Da du eine Liste (Array) speicherst, zählen wir einfach die Länge des Arrays
-            const ownedCards = JSON.parse(savedData);
-            collectedCount = ownedCards.length;
+            // Prozent berechnen
+            const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
+
+            // HTML Elemente finden
+            const fillBar = document.getElementById('fill-' + setId);
+            const percText = document.getElementById('perc-' + setId);
+            const statText = document.getElementById('stat-' + setId);
+
+            // Werte setzen
+            if (fillBar) fillBar.style.width = percent + '%';
+            if (percText) percText.textContent = percent + '%';
+            if (statText) statText.textContent = `${collectedCount}/${totalCards}`;
+
+            // Ausgrauen Logik
+            if (collectedCount === 0) {
+                set.classList.add('set-locked');
+            } else {
+                set.classList.remove('set-locked');
+            }
+        });
+    }
+
+    // Suchfunktion für die Startseite
+    function filterSets() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        document.querySelectorAll('.card-wrapper').forEach(card => {
+            const setName = card.querySelector('h3').innerText.toLowerCase();
+            card.classList.toggle('hidden', !setName.includes(query));
+        });
+    }
+
+    // Backup Export
+    function exportBackup() {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) { 
+            data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); 
         }
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `pokemon_backup.json`;
+        a.click();
+    }
 
-        // Prozent berechnen
-        const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
+    // Backup Import
+    function importBackup(event) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                localStorage.clear();
+                for (const key in data) { localStorage.setItem(key, data[key]); }
+                location.reload();
+            } catch(err) { alert("Fehler beim Import!"); }
+        };
+        reader.readAsText(event.target.files[0]);
+    }
 
-        // Die Elemente in der Kachel updaten
-        const fillBar = document.getElementById('fill-' + setId);
-        const percText = document.getElementById('perc-' + setId);
-        const statText = document.getElementById('stat-' + setId);
-
-        if (fillBar) fillBar.style.width = percent + '%';
-        if (percText) percText.textContent = percent + '%';
-        if (statText) statText.textContent = collectedCount + '/' + totalCards;
-
-        // --- Ausgrauen Logik ---
-        if (collectedCount === 0) {
-            set.classList.add('set-locked');
-        } else {
-            set.classList.remove('set-locked');
-        }
-    });
-}
-
-// Jedes Mal ausführen, wenn die Seite angezeigt wird
-window.addEventListener('pageshow', updateHomeProgress);
-// Auch beim ersten Laden ausführen
-window.addEventListener('DOMContentLoaded', updateHomeProgress);
-</script>
+    // Events für das Laden der Seite
+    window.addEventListener('pageshow', updateHomeProgress);
+    window.addEventListener('DOMContentLoaded', updateHomeProgress);
 </script>
 </body>
 </html>
+
 
 
 
