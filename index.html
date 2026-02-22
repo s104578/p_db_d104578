@@ -4,436 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Karten Datenbank</title>
-   <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #ffffff;
-        color: #000;
-        margin: 0;
-        padding: 0;
-    }
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --container-bg: #ffffff;
+            --card-bg: #f2f2f2;
+            --dark-blue-gray: #1a2634;
+            --light-blue-gray: #2c3e50;
+        }
 
-    /* Der Container zentriert alles auf der Seite */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Zentriert Kinder-Elemente horizontal */
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Zentriert die Hauptüberschrift */
-    h1 {
-        text-align: center;
-        width: 100%;
-        margin-bottom: 20px;
-        font-size: 2.5rem;
-    }
+        body.dark-mode {
+            --bg-color: var(--dark-blue-gray);
+            --text-color: #ecf0f1;
+            --container-bg: var(--dark-blue-gray);
+            --card-bg: var(--light-blue-gray);
+        }
 
-    /* Zentriert die Hauptüberschrift */
-    h1 {
-        text-align: center;
-        width: 100%;
-        margin-bottom: 20px;
-        font-size: 2.5rem;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* Suchbereich: Exakt so breit wie das Grid (1200px) */
-   .top-controls {
-    width: 100%;
-    max-width: 1200px; /* Exakt die Breite der 4 Kacheln */
-    margin: 0 auto 40px auto; /* Zentriert die Sektion und gibt Abstand nach unten */
-    display: flex;
-    flex-direction: column; /* Stapelt Suche und Buttons übereinander für bessere Kontrolle */
-    align-items: center;
-    gap: 20px;
-}
+        h1 { font-size: 2.5rem; text-align: center; margin-bottom: 20px; }
 
-    /* Das eigentliche Suchfeld */
-    #search-input {
-    width: 100%; /* Suchleiste streckt sich über die gesamte Breite des Containers */
-    padding: 15px 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 1.1rem;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-    .search-wrapper {
-    width: 100%; /* Nutzt die vollen 1200px */
-    display: flex;
-    justify-content: center;
-}
-    /* Buttons */
-  /* SCHRIFTART & LAYOUT ANPASSUNGEN */
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        transition: background-color 0.3s, color 0.3s;
-    }
+        .top-controls {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
 
-    /* Dark Mode Farben: Blau-Grau */
-    body.dark-mode {
-        background-color: #1a2634; /* Dunkles Blau-Grau */
-        color: #ecf0f1;
-    }
+        #search-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
 
-    body.dark-mode .container, 
-    body.dark-mode .set-card-box {
-        background-color: #2c3e50; /* Etwas helleres Blau-Grau für Boxen */
-        color: #ecf0f1;
-    }
+        .button-group { display: flex; gap: 10px; }
 
-    /* Buttons nebeneinander */
-    .top-controls {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
+        .btn {
+            font-family: inherit;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-export { background-color: #3498db; }
+        .btn-import { background-color: #95a5a6; }
 
-    .button-group {
-        display: flex;
-        gap: 10px; /* Abstand zwischen den Buttons */
-    }
+        #dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #3498db;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
 
-    .btn {
-        font-family: inherit; /* Nutzt Segoe UI von der Überschrift */
-        padding: 10px 25px;
-        border-radius: 8px;
-        cursor: pointer;
-        border: none;
-        font-weight: bold;
-        color: white;
-        transition: opacity 0.2s;
-    }
+        .section-title { font-size: 1.8rem; margin: 40px 0 20px 0; }
 
-    /* Dark Mode Switch Button oben rechts */
-    #dark-mode-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1000;
-        background: #3498db;
-        border: none;
-        padding: 10px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 1.2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    .btn-export { background-color: #3498db; }
-    .btn-import { background-color: #95a5a6; }
+        .sets-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            width: 100%;
+        }
 
-    /* Zentrierte Sektionstitel */
-    .section-title {
-        width: 100%;
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: bold;
-        margin: 40px 0 30px 0;
-        color: #000;
-    }
+        .card-wrapper {
+            text-decoration: none !important;
+            color: inherit !important;
+            display: block;
+            transition: filter 0.5s ease;
+        }
 
-    /* Das Grid für 4 Kacheln nebeneinander */
-    .sets-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 25px;
-        width: 100%;
-        margin-bottom: 60px;
-    }
+        /* Ausgrauen Logik */
+        .card-wrapper.set-locked {
+            filter: grayscale(100%) opacity(0.6) !important;
+        }
 
-    /* Kachel-Design */
-    .card-wrapper {
-        text-decoration: none !important;
-        color: #000 !important;
-        display: block;
-    }
+        .set-card-box {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .set-card-box:hover { transform: scale(1.03); }
+        .set-card-box img { max-width: 80%; max-height: 110px; object-fit: contain; }
 
-    .set-card-box {
-        background-color: #f2f2f2;
-        border-radius: 15px;
-        height: 200px; /* Leicht erhöht für bessere Optik */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transition: transform 0.2s ease;
-    }
+        .progress-section { margin-top: 12px; width: 100%; }
+        .progress-bar { background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: #2ecc71; width: 0%; transition: width 0.5s ease; }
+        .stats { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.85rem; }
 
-    .set-card-box:hover {
-        transform: scale(1.03);
-    }
-
-    .set-card-box img {
-        max-width: 80%;
-        max-height: 110px;
-        object-fit: contain;
-    }
-
-    .set-card-box h3 {
-        margin-top: 15px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        text-align: center;
-    }
-/* Erweitere dein CSS um diese Zeilen */
-    .card-wrapper.set-locked {
-    filter: grayscale(100%) opacity(0.6) !important;
-}
-
-    .card-wrapper.set-locked:hover {
-    filter: grayscale(30%) opacity(1) !important;
-}
-
-    .hidden { display: none !important; }
-    /* Fortschritt unter der Kachel */
-    .progress-section {
-        margin-top: 12px;
-        width: 100%;
-    }
-
-    .progress-bar {
-        background-color: #e0e0e0;
-        height: 8px;
-        border-radius: 4px;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-    height: 100%;
-    background-color: #2ecc71; /* Ein schönes Pokémon-Grün */
-    width: 0%; /* Startwert */
-    transition: width 0.5s ease-in-out; /* Macht das Laden des Balkens geschmeidig */
-}
-
-    .stats {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 6px;
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-
-    /* Versteckte Elemente */
-    #importFile, .hidden { display: none; }
-</style>
+        #importFile, .hidden { display: none; }
+    </style>
 </head>
 <body>
-    <h1>Pokémon Karten Datenbank</h1>
-    <div class="top-controls">
-        <input type="text" id="search-input" class="search-bar" placeholder="Nach Set suchen..." onkeyup="filterSets()">
-        <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
-        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
-        <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
-    </div>
+    <button id="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
 
- <div class="container">
-    <h2 class="category-title">Englische & Deutsche Sets</h2>
-    <div class="sets-grid">
-        <a href="kartenliste.html?set=base4&name=Base Set 2" class="card-wrapper" data-id="base4" data-total="130">
-            <div class="set-card-box"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
-                <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">0/130</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=ex1&name=EX Ruby Sapphire" class="card-wrapper" data-id="ex1" data-total="109">
-            <div class="set-card-box"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-ex1"></div></div>
-                <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">0/109</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=xy12&name=Evolutions" class="card-wrapper" data-id="xy12" data-total="113">
-            <div class="set-card-box"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-xy12"></div></div>
-                <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/113</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=cel25&name=Celebrations" class="card-wrapper" data-id="cel25" data-total="25">
-            <div class="set-card-box"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
-            <div class="progress-section">
-                <div class="progress-bar"><div class="progress-fill" id="fill-cel25"></div></div>
-                <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/25</span></div>
-            </div>
-        </a>
-
-        <a href="kartenliste.html?set=swsh45&name=Shining Fates" class="card-wrapper" data-id="swsh45" data-total="195">
-            <div class="set-card-box"><img src="bilder/swsh45.png" alt="Shining Fates"><h3>Shining Fates</h3></div>
-            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-swsh45"></div></div>
-                <div class="stats"><span id="perc-swsh45">0%</span><span id="stat-swsh45">0/195</span></div>
-            </div>
-        </a>
-    </div></div>
     <div class="container">
-    <h2 class="section-title">Japanische Sets</h2>
-    <div class="sets-grid">
-        <a href="kartenliste.html?set=sm10b&name=Sky Legends" class="card-wrapper" data-id="sm10b" data-total="69">
-            <div class="set-card-box"><img src="bilder/sm10b.png"><h3>Sky Legends</h3></div>
-            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm10b"></div></div>
-            <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">0/69</span></div></div>
-        </a>
-        <a href="kartenliste.html?set=sm11&name=Miracle Twins" class="card-wrapper" data-id="sm11" data-total="115">
-            <div class="set-card-box"><img src="bilder/sm11.png"><h3>Miracle Twins</h3></div>
-            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11"></div></div>
-            <div class="stats"><span id="perc-sm11">0%</span><span id="stat-sm11">0/115</span></div></div>
-        </a>
-        <a href="kartenliste.html?set=sm11a&name=Remix Bout" class="card-wrapper" data-id="sm11a" data-total="80">
-            <div class="set-card-box"><img src="bilder/sm11a.png" alt="Remix Bout"><h3>Remix Bout</h3></div>
-            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-sm11a"></div></div>
-            <div class="stats"><span id="perc-sm11a">0%</span><span id="stat-sm11a">0/80</span></div></div>
-        </a>
-        <a href="kartenliste.html?set=smp2&name=Det. Pikachu" class="card-wrapper" data-id="smp2" data-total="24">
-            <div class="set-card-box"><img src="bilder/smp2.png"><h3>Det. Pikachu</h3></div>
-            <div class="progress-section"><div class="progress-bar"><div class="progress-fill" id="fill-smp2"></div></div>
-            <div class="stats"><span id="perc-smp2">0%</span><span id="stat-smp2">0/24</span></div></div>
-        </a>
+        <h1>Pokémon Karten Datenbank</h1>
+        
+        <div class="top-controls">
+            <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
+            <div class="button-group">
+                <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
+                <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
+            </div>
+            <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
+        </div>
+
+        <h2 class="section-title">Englische & Deutsche Sets</h2>
+        <div class="sets-grid">
+            <a href="kartenliste.html?set=base4&name=Base Set 2" class="card-wrapper" data-id="base4" data-total="130">
+                <div class="set-card-box"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
+                <div class="progress-section">
+                    <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
+                    <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">0/130</span></div>
+                </div>
+            </a>
+            </div>
+
+        <h2 class="section-title">Japanische Sets</h2>
+        <div class="sets-grid">
+            <a href="kartenliste.html?set=sm10b&name=Sky Legends" class="card-wrapper" data-id="sm10b" data-total="69">
+                <div class="set-card-box"><img src="bilder/sm10b.png"><h3>Sky Legends</h3></div>
+                <div class="progress-section">
+                    <div class="progress-bar"><div class="progress-fill" id="fill-sm10b"></div></div>
+                    <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">0/69</span></div>
+                </div>
+            </a>
+        </div>
     </div>
-</div>
-</body>
-   <script>
-    // Diese Funktion berechnet den Fortschritt basierend auf deiner kartenliste.html
-    function updateHomeProgress() {
-        const sets = document.querySelectorAll('.card-wrapper');
 
-        sets.forEach(set => {
-            const setId = set.getAttribute('data-id');
-            const totalCards = parseInt(set.getAttribute('data-total'));
-            
-            // Nutzt den korrekten Key aus der kartenliste.html: owned_ID
-            const storageKey = `owned_${setId}`;
-            const savedData = localStorage.getItem(storageKey);
-            
-            let collectedCount = 0;
-            if (savedData) {
-                const ownedCards = JSON.parse(savedData);
-                collectedCount = ownedCards.length;
-            }
-
-            // Prozent berechnen
-            const percent = totalCards > 0 ? Math.round((collectedCount / totalCards) * 100) : 0;
-
-            // HTML Elemente finden
-            const fillBar = document.getElementById('fill-' + setId);
-            const percText = document.getElementById('perc-' + setId);
-            const statText = document.getElementById('stat-' + setId);
-
-            // Werte setzen
-            if (fillBar) fillBar.style.width = percent + '%';
-            if (percText) percText.textContent = percent + '%';
-            if (statText) statText.textContent = `${collectedCount}/${totalCards}`;
-
-            // Ausgrauen Logik
-            if (collectedCount === 0) {
-                set.classList.add('set-locked');
-            } else {
-                set.classList.remove('set-locked');
-            }
-        });
-    }
-
-    // Suchfunktion für die Startseite
-    function filterSets() {
-        const query = document.getElementById('search-input').value.toLowerCase();
-        document.querySelectorAll('.card-wrapper').forEach(card => {
-            const setName = card.querySelector('h3').innerText.toLowerCase();
-            card.classList.toggle('hidden', !setName.includes(query));
-        });
-    }
-
-    // Backup Export
-    function exportBackup() {
-        const data = {};
-        for (let i = 0; i < localStorage.length; i++) { 
-            data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i)); 
+    <script>
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
         }
-        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `pokemon_backup.json`;
-        a.click();
-    }
 
-    // Backup Import
-    function importBackup(event) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
+        function updateHomeProgress() {
+            document.querySelectorAll('.card-wrapper').forEach(set => {
+                const setId = set.getAttribute('data-id');
+                const total = parseInt(set.getAttribute('data-total'));
+                const saved = localStorage.getItem(`owned_${setId}`);
+                const count = saved ? JSON.parse(saved).length : 0;
+                const percent = Math.round((count / total) * 100) || 0;
+
+                const fill = document.getElementById(`fill-${setId}`);
+                const perc = document.getElementById(`perc-${setId}`);
+                const stat = document.getElementById(`stat-${setId}`);
+
+                if (fill) fill.style.width = percent + '%';
+                if (perc) perc.innerText = percent + '%';
+                if (stat) stat.innerText = `${count}/${total}`;
+
+                count === 0 ? set.classList.add('set-locked') : set.classList.remove('set-locked');
+            });
+        }
+
+        function filterSets() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            document.querySelectorAll('.card-wrapper').forEach(c => {
+                const name = c.querySelector('h3').innerText.toLowerCase();
+                c.classList.toggle('hidden', !name.includes(q));
+            });
+        }
+
+        function exportBackup() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                data[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+            }
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(data)], {type: 'application/json'}));
+            a.download = 'pokemon_backup.json';
+            a.click();
+        }
+
+        function importBackup(e) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const data = JSON.parse(event.target.result);
                 localStorage.clear();
-                for (const key in data) { localStorage.setItem(key, data[key]); }
+                for (const k in data) localStorage.setItem(k, data[k]);
                 location.reload();
-            } catch(err) { alert("Fehler beim Import!"); }
-        };
-        reader.readAsText(event.target.files[0]);
-    }
-
-    // Events für das Laden der Seite
-    window.addEventListener('pageshow', updateHomeProgress);
-    window.addEventListener('DOMContentLoaded', updateHomeProgress);
-   <script>
-    // DARK MODE LOGIK
-    function toggleDarkMode() {
-        const isDark = document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
-    }
-
-    // Beim Laden prüfen, ob Dark Mode aktiv war
-    function initDarkMode() {
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
+            };
+            reader.readAsText(e.target.files[0]);
         }
-    }
 
-    // Rufe initDarkMode in deiner window.onload oder DOMContentLoaded auf
-    window.addEventListener('DOMContentLoaded', () => {
-        initDarkMode();
-        updateHomeProgress();
-    });
-</script>    
-</script>
+        window.addEventListener('pageshow', updateHomeProgress);
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
+            updateHomeProgress();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
