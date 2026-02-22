@@ -109,6 +109,35 @@
         .btn-import { background-color: #95a5a6; }
         <div class="filter-group" ...> ... </div> #dark-mode-toggle { ... }
 
+        /* Scroll-to-Top Button */
+#backToTop {
+    display: none; /* Wird erst per JS sichtbar */
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1500;
+    width: 50px;
+    height: 50px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Macht den Button rund */
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-size: 24px;
+    transition: background-color 0.3s, transform 0.2s, opacity 0.3s;
+    align-items: center;
+    justify-content: center;
+}
+
+#backToTop:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+#backToTop:active {
+    transform: scale(0.9);
+}
         /* Dark Mode Button Positionierung */
         #dark-mode-toggle {
             position: fixed;
@@ -197,7 +226,7 @@
 </head>
 <body>
     <button id="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
-
+    <button id="backToTop" onclick="scrollToTop()" title="Nach oben">↑</button>
     <div class="container">
         <h1>Pokémon Karten Datenbank</h1>
         
@@ -551,12 +580,30 @@
             initDarkMode();
             updateHomeProgress();
         });
+// Überwacht das Scroll-Verhalten
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    // Zeigt den Button an, wenn mehr als 300px gescrollt wurde
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
+};
 
+// Die eigentliche Scroll-Funktion
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Sorgt für ein sanftes Gleiten statt einem harten Sprung
+    });
+}
         // Wichtig: Update auch wenn man per "Zurück"-Button kommt
         window.addEventListener('pageshow', updateHomeProgress);
     </script>
 </body>
 </html>
+
 
 
 
