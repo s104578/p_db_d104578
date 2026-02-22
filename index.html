@@ -232,20 +232,19 @@
         <h1>Pokémon Karten Datenbank</h1>
         
         <div class="top-controls">
-            <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
-            <input type="text" id="search-input" placeholder="Nach Set oder Karte suchen..." onkeyup="filterGlobal()">
-
+    <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
+    
+    <div class="button-group">
+        <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
+        <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
+    </div>
+    </div>
 <div id="card-search-results" style="display:none; width:100%; max-width:800px; margin-bottom:20px;">
     <h3 class="section-title">Gefundene Karten</h3>
     <table style="width:100%; background:var(--card-bg); border-radius:10px; padding:10px;">
         <tbody id="card-results-body"></tbody>
     </tbody>
 </div>
-            
-            <div class="button-group">
-                <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
-                <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
-            </div>
 
             <div class="filter-group" style="margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #7f8c8d; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('all')">Alle</button>
@@ -694,80 +693,46 @@ function scrollToTop() {
       }, 100); 
     }
   });
-       let globalCardIndex = []; // Hier speichern wir alle Kartennamen
-const allSetIds = [
-    'base1', 'base2', 'base3', 'tr1', 'gym1', 'gym2', 'ex1', 
-    'xy12', 'swsh45', 'cel25', 'swsh6', 'swsh7', 'swsh8', 
-    'swsh11', 'swsh12', 'sv3', 'sv3pt5', 'sv8pt5', 'me01' // Ergänze hier alle deine Set-IDs
-];
+       
+// INITIALISIERUNG BEIM LADEN
+        window.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            updateHomeProgress();
+        });
 
-// 1. Alle Karten beim Start laden
-async function preloadAllCards() {
-    for (const setId of allSetIds) {
-        try {
-            const res = await fetch(`daten/${setId}.json`);
-            if (res.ok) {
-                const cards = await res.json();
-                // Wir speichern den Namen und die Set-Info
-                cards.forEach(c => {
-                    globalCardIndex.push({
-                        ...c,
-                        setName: document.querySelector(`[data-id="${setId}"] h3`)?.innerText || setId,
-                        setId: setId
-                    });
-                });
+        // Überwacht das Scroll-Verhalten für den Back-to-Top Button
+        window.onscroll = function() {
+            const btn = document.getElementById("backToTop");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.style.display = "flex";
+            } else {
+                btn.style.display = "none";
             }
-        } catch (e) { console.error("Fehler beim Indexieren von " + setId); }
-    }
-}
+        };
 
-// 2. Die neue globale Filter-Funktion
-function filterGlobal() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    const resultsDiv = document.getElementById('card-search-results');
-    const resultsBody = document.getElementById('card-results-body');
-    
-    // Normale Set-Filterung (dein alter Code)
-    document.querySelectorAll('.card-wrapper').forEach(card => {
-        const setName = card.querySelector('h3').innerText.toLowerCase();
-        card.style.display = setName.includes(query) ? "block" : "none";
-    });
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    // Karten-Suche erst ab 3 Zeichen
-    if (query.length < 3) {
-        resultsDiv.style.display = "none";
-        return;
-    }
+        window.addEventListener('pageshow', updateHomeProgress);
 
-    // Karten filtern
-    const matches = globalCardIndex.filter(c => 
-        (c.nameDE || c.name || "").toLowerCase().includes(query)
-    ).slice(0, 10); // Nur die ersten 10 Treffer für die Performance
+        // Scroll-Position speichern und wiederherstellen
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        });
 
-    if (matches.length > 0) {
-        resultsDiv.style.display = "block";
-        resultsBody.innerHTML = matches.map(c => `
-            <tr style="border-bottom: 1px solid #ccc; cursor:pointer;" onclick="location.href='kartenliste.html?set=${c.setId}&name=${c.setName}'">
-                <td style="padding:10px;"><img src="https://images.pokemontcg.io/${c.setId}/${c.id.split('-')[1]}.png" style="width:40px; border-radius:3px;" onerror="this.src='bilder/placeholder.png'"></td>
-                <td style="padding:10px;"><strong>${c.nameDE || c.name}</strong></td>
-                <td style="padding:10px; font-size:0.8rem; color:var(--accent-blue);">Set: ${c.setName}</td>
-                <td style="padding:10px; font-weight:bold;">#${c.n}</td>
-            </tr>
-        `).join('');
-    } else {
-        resultsDiv.style.display = "none";
-    }
-}
-
-// Initialisierung erweitern
-window.addEventListener('DOMContentLoaded', () => {
-    initDarkMode();
-    updateHomeProgress();
-    preloadAllCards(); // Karten im Hintergrund laden
-});
+        window.addEventListener('load', () => {
+            const scrollPos = sessionStorage.getItem('scrollPosition');
+            if (scrollPos) {
+                setTimeout(() => {
+                    window.scrollTo({ top: parseInt(scrollPos), behavior: 'smooth' });
+                }, 100); 
+            }
+        });
     </script>
 </body>
 </html>
+
 
 
 
