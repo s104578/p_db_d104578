@@ -27,6 +27,35 @@
             --text-color: #ecf0f1;
             --container-bg: var(--light-blue-gray);
         }
+        /* Scroll-to-Top Button */
+#backToTop {
+    display: none; /* Wird erst per JS sichtbar */
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1500;
+    width: 50px;
+    height: 50px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Macht den Button rund */
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-size: 24px;
+    transition: background-color 0.3s, transform 0.2s, opacity 0.3s;
+    align-items: center;
+    justify-content: center;
+}
+
+#backToTop:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+#backToTop:active {
+    transform: scale(0.9);
+}
         /* Modal Hintergrund (der dunkle Bereich) */
 .modal {
     display: none; 
@@ -104,6 +133,7 @@
 </head>
 <body>
     <button id="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+    <button id="backToTop" onclick="scrollToTop()" title="Nach oben">↑</button>
 
     <div class="container">
         <div class="back-nav"><a href="index.html" class="btn-back">← Zurück</a></div>
@@ -235,7 +265,24 @@ function closeModal() {
             (c.n || "").toString().includes(term)
         ));
     };
+// Überwacht das Scroll-Verhalten
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    // Zeigt den Button an, wenn mehr als 300px gescrollt wurde
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
+};
 
+// Die eigentliche Scroll-Funktion
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Sorgt für ein sanftes Gleiten statt einem harten Sprung
+    });
+}
     document.getElementById('select-all').onchange = (e) => {
         localStorage.setItem(storageKey, JSON.stringify(e.target.checked ? allCards.map(c => c.id) : []));
         renderTable(allCards); 
@@ -250,6 +297,7 @@ function closeModal() {
 </div>
 </body>
 </html>
+
 
 
 
