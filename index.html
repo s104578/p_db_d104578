@@ -203,10 +203,19 @@
         
         <div class="top-controls">
             <input type="text" id="search-input" placeholder="Nach Set suchen..." onkeyup="filterSets()">
+            
             <div class="button-group">
                 <button class="btn btn-export" onclick="exportBackup()">Sichern</button>
                 <button class="btn btn-import" onclick="document.getElementById('importFile').click()">Laden</button>
             </div>
+
+            <div class="filter-group" style="margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" style="background: #7f8c8d; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('all')">Alle</button>
+                <button class="btn" style="background: #e67e22; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('started')">Begonnen</button>
+                <button class="btn" style="background: #27ae60; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('completed')">Vollständig</button>
+                <button class="btn" style="background: #c0392b; padding: 8px 15px; font-size: 0.9rem;" onclick="applyStatusFilter('empty')">Leer</button>
+            </div>
+
             <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
         </div>
         <h2 class="section-title">Wizards of the Coast (Klassik)</h2>
@@ -548,6 +557,7 @@
     </script>
 </body>
 </html>
+
 
 
 
