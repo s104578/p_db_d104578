@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Karten Datenbank</title>
-    <link rel="icon" type="image/png" href="hyperball.png">
     <style>
         :root {
             --bg-color: #ffffff;
@@ -32,12 +31,14 @@
             --card-bg: var(--light-blue-gray);
         }
 
+        /* Effekt für das komplette Set */
         .set-completed {
-            border: 2px solid #d4af37 !important;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            border: 2px solid #d4af37 !important; /* Goldener Rahmen */
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); /* Goldener Schimmer */
             position: relative;
         }
 
+        /* Gold-Abzeichen (Badge) oben rechts an der Kachel */
         .set-completed::after {
             content: '🏆';
             position: absolute;
@@ -55,6 +56,7 @@
             z-index: 5;
         }
 
+        /* Im Dark Mode das Weiß des Badges anpassen */
         body.dark-mode .set-completed::after {
             background: var(--light-blue-gray);
         }
@@ -105,26 +107,38 @@
         .btn:active { transform: scale(0.98); }
         .btn-export { background-color: var(--accent-blue); }
         .btn-import { background-color: #95a5a6; }
+        <div class="filter-group" ...> ... </div> #dark-mode-toggle { ... }
 
-        #backToTop {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1500;
-            width: 50px;
-            height: 50px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-size: 24px;
-            align-items: center;
-            justify-content: center;
-        }
+        /* Scroll-to-Top Button */
+#backToTop {
+    display: none; /* Wird erst per JS sichtbar */
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1500;
+    width: 50px;
+    height: 50px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Macht den Button rund */
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    font-size: 24px;
+    transition: background-color 0.3s, transform 0.2s, opacity 0.3s;
+    align-items: center;
+    justify-content: center;
+}
 
+#backToTop:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+#backToTop:active {
+    transform: scale(0.9);
+}
+        /* Dark Mode Button Positionierung */
         #dark-mode-toggle {
             position: fixed;
             top: 20px;
@@ -157,6 +171,7 @@
             margin-bottom: 50px;
         }
 
+        /* Responsive Grid für kleinere Bildschirme */
         @media (max-width: 900px) {
             .sets-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -168,10 +183,17 @@
             text-decoration: none !important;
             color: inherit !important;
             display: block;
+            transition: filter 0.5s ease;
         }
 
+        /* Die Kachel ist grau, wenn keine Karten gesammelt wurden */
         .card-wrapper.set-locked {
             filter: grayscale(100%) opacity(0.6) !important;
+            transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+
+        .card-wrapper.set-locked:hover {
+            filter: grayscale(20%) opacity(1) !important;
         }
 
         .set-card-box {
@@ -205,7 +227,6 @@
 <body>
     <button id="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
     <button id="backToTop" onclick="scrollToTop()" title="Nach oben">↑</button>
-    
     <div class="container">
         <h1>Pokémon Karten Datenbank</h1>
         
@@ -226,62 +247,71 @@
 
             <input type="file" id="importFile" accept=".json" onchange="importBackup(event)">
         </div>
-
         <h2 class="section-title">Wizards of the Coast (Klassik)</h2>
-        <div class="sets-grid">
-            <a href="kartenliste.html?set=base1&name=Base Set" class="card-wrapper" data-id="base1" data-total="102">
-                <div class="set-card-box"><img src="bilder/base1.png"><h3>Base Set</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-base1"></div></div>
-                    <div class="stats"><span id="perc-base1">0%</span><span id="stat-base1">0/102</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=base4&name=Base Set 2" class="card-wrapper" data-id="base4" data-total="130">
+<div class="sets-grid">
+    <a href="kartenliste.html?set=base1&name=Base Set" class="card-wrapper" data-id="base1" data-total="102">
+        <div class="set-card-box"><img src="bilder/base1.png"><h3>Base Set</h3></div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-base1"></div></div>
+            <div class="stats"><span id="perc-base1">0%</span><span id="stat-base1">0/102</span></div>
+        </div>
+    </a>
+    <a href="kartenliste.html?set=base4&name=Base Set 2" class="card-wrapper" data-id="base4" data-total="130">
                 <div class="set-card-box"><img src="bilder/base4.png"><h3>Base Set 2</h3></div>
                 <div class="progress-section">
                     <div class="progress-bar"><div class="progress-fill" id="fill-base4"></div></div>
                     <div class="stats"><span id="perc-base4">0%</span><span id="stat-base4">0/130</span></div>
                 </div>
             </a>
-            <a href="kartenliste.html?set=base2&name=Jungle" class="card-wrapper" data-id="base2" data-total="64">
-                <div class="set-card-box"><img src="bilder/base2.png"><h3>Jungle</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
-                    <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">0/64</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=base3&name=Fossil" class="card-wrapper" data-id="base3" data-total="62">
-                <div class="set-card-box"><img src="bilder/base3.png"><h3>Fossil</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-base3"></div></div>
-                    <div class="stats"><span id="perc-base3">0%</span><span id="stat-base3">0/62</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=tr1&name=Team Rocket" class="card-wrapper" data-id="tr1" data-total="83">
-                <div class="set-card-box"><img src="bilder/tr1.png"><h3>Team Rocket</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-tr1"></div></div>
-                    <div class="stats"><span id="perc-tr1">0%</span><span id="stat-tr1">0/83</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=gym1&name=Gym Heroes" class="card-wrapper" data-id="gym1" data-total="132">
-                <div class="set-card-box"><img src="bilder/gym1.png"><h3>Gym Heroes</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-gym1"></div></div>
-                    <div class="stats"><span id="perc-gym1">0%</span><span id="stat-gym1">0/132</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=gym2&name=Gym Challenge" class="card-wrapper" data-id="gym2" data-total="132">
-                <div class="set-card-box"><img src="bilder/gym2.png"><h3>Gym Challenge</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-gym2"></div></div>
-                    <div class="stats"><span id="perc-gym2">0%</span><span id="stat-gym2">0/132</span></div>
-                </div>
-            </a>
+    <a href="kartenliste.html?set=base2&name=Jungle" class="card-wrapper" data-id="base2" data-total="64">
+        <div class="set-card-box"><img src="bilder/base2.png"><h3>Jungle</h3></div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-base2"></div></div>
+            <div class="stats"><span id="perc-base2">0%</span><span id="stat-base2">0/64</span></div>
         </div>
+    </a>
 
-        <h2 class="section-title">Englische & Deutsche Sets</h2>
+    <a href="kartenliste.html?set=base3&name=Fossil" class="card-wrapper" data-id="base3" data-total="62">
+        <div class="set-card-box"><img src="bilder/base3.png"><h3>Fossil</h3></div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-base3"></div></div>
+            <div class="stats"><span id="perc-base3">0%</span><span id="stat-base3">0/62</span></div>
+        </div>
+    </a>
+
+    <a href="kartenliste.html?set=tr1&name=Team Rocket" class="card-wrapper" data-id="tr1" data-total="83">
+        <div class="set-card-box"><img src="bilder/tr1.png"><h3>Team Rocket</h3></div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-tr1"></div></div>
+            <div class="stats"><span id="perc-tr1">0%</span><span id="stat-tr1">0/83</span></div>
+        </div>
+    </a>
+   <a href="kartenliste.html?set=gym1&name=Gym Heroes" class="card-wrapper" data-id="gym1" data-total="132">
+    <div class="set-card-box">
+        <img src="bilder/gym1.png" onerror="this.src='bilder/placeholder.png'">
+        <h3>Gym Heroes</h3>
+    </div>
+    <div class="progress-section">
+        <div class="progress-bar"><div class="progress-fill" id="fill-gym1"></div></div>
+        <div class="stats"><span id="perc-gym1">0%</span><span id="stat-gym1">0/132</span></div>
+    </div>
+</a>
+
+<a href="kartenliste.html?set=gym2&name=Gym Challenge" class="card-wrapper" data-id="gym2" data-total="132">
+    <div class="set-card-box">
+        <img src="bilder/gym2.png" onerror="this.src='bilder/placeholder.png'">
+        <h3>Gym Challenge</h3>
+    </div>
+    <div class="progress-section">
+        <div class="progress-bar"><div class="progress-fill" id="fill-gym2"></div></div>
+        <div class="stats"><span id="perc-gym2">0%</span><span id="stat-gym2">0/132</span></div>
+    </div>
+</a>
+</div>
+       <h2 class="section-title">Englische & Deutsche Sets</h2>
         <div class="sets-grid">
+            
+
             <a href="kartenliste.html?set=ex1&name=EX Ruby Sapphire" class="card-wrapper" data-id="ex1" data-total="109">
                 <div class="set-card-box"><img src="bilder/ex1.png"><h3>EX Ruby & Sapphire</h3></div>
                 <div class="progress-section">
@@ -289,6 +319,7 @@
                     <div class="stats"><span id="perc-ex1">0%</span><span id="stat-ex1">0/109</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=xy12&name=Evolutions" class="card-wrapper" data-id="xy12" data-total="113">
                 <div class="set-card-box"><img src="bilder/xy12.png"><h3>Evolutions</h3></div>
                 <div class="progress-section">
@@ -296,6 +327,7 @@
                     <div class="stats"><span id="perc-xy12">0%</span><span id="stat-xy12">0/113</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh45&name=Shining Fates" class="card-wrapper" data-id="swsh45" data-total="195">
                 <div class="set-card-box"><img src="bilder/swsh45.png"><h3>Shining Fates</h3></div>
                 <div class="progress-section">
@@ -303,6 +335,7 @@
                     <div class="stats"><span id="perc-swsh45">0%</span><span id="stat-swsh45">0/195</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=cel25&name=Celebrations" class="card-wrapper" data-id="cel25" data-total="25">
                 <div class="set-card-box"><img src="bilder/cel25.png"><h3>Celebrations</h3></div>
                 <div class="progress-section">
@@ -310,6 +343,7 @@
                     <div class="stats"><span id="perc-cel25">0%</span><span id="stat-cel25">0/25</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh6&name=Chilling Reign" class="card-wrapper" data-id="swsh6" data-total="233">
                 <div class="set-card-box"><img src="bilder/swsh6.png"><h3>Chilling Reign</h3></div>
                 <div class="progress-section">
@@ -317,6 +351,7 @@
                     <div class="stats"><span id="perc-swsh6">0%</span><span id="stat-swsh6">0/233</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh7&name=Evolving Skies" class="card-wrapper" data-id="swsh7" data-total="237">
                 <div class="set-card-box"><img src="bilder/swsh7.png"><h3>Evolving Skies</h3></div>
                 <div class="progress-section">
@@ -324,6 +359,7 @@
                     <div class="stats"><span id="perc-swsh7">0%</span><span id="stat-swsh7">0/237</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh8&name=Fusion Strike" class="card-wrapper" data-id="swsh8" data-total="284">
                 <div class="set-card-box"><img src="bilder/swsh8.png"><h3>Fusion Strike</h3></div>
                 <div class="progress-section">
@@ -331,6 +367,7 @@
                     <div class="stats"><span id="perc-swsh8">0%</span><span id="stat-swsh8">0/284</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh11&name=Lost Origin" class="card-wrapper" data-id="swsh11" data-total="247">
                 <div class="set-card-box"><img src="bilder/swsh11.png"><h3>Lost Origin</h3></div>
                 <div class="progress-section">
@@ -338,6 +375,7 @@
                     <div class="stats"><span id="perc-swsh11">0%</span><span id="stat-swsh11">0/247</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=swsh12&name=Silver Tempest" class="card-wrapper" data-id="swsh12" data-total="245">
                 <div class="set-card-box"><img src="bilder/swsh12.png"><h3>Silver Tempest</h3></div>
                 <div class="progress-section">
@@ -345,6 +383,7 @@
                     <div class="stats"><span id="perc-swsh12">0%</span><span id="stat-swsh12">0/245</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=sv3&name=Obsidian Flames" class="card-wrapper" data-id="sv3" data-total="230">
                 <div class="set-card-box"><img src="bilder/sv3.png"><h3>Obsidian Flames</h3></div>
                 <div class="progress-section">
@@ -352,6 +391,7 @@
                     <div class="stats"><span id="perc-sv3">0%</span><span id="stat-sv3">0/230</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=sv3pt5&name=151" class="card-wrapper" data-id="sv3pt5" data-total="210">
                 <div class="set-card-box"><img src="bilder/sv3pt5.png"><h3>151</h3></div>
                 <div class="progress-section">
@@ -359,6 +399,7 @@
                     <div class="stats"><span id="perc-sv3pt5">0%</span><span id="stat-sv3pt5">0/210</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=sv8pt5&name=Prismatic Evolutions" class="card-wrapper" data-id="sv8pt5" data-total="180">
                 <div class="set-card-box"><img src="bilder/sv8pt5.png"><h3>Prismatic Evolutions</h3></div>
                 <div class="progress-section">
@@ -367,62 +408,86 @@
                 </div>
             </a>
         </div>
-
         <h2 class="section-title">Mega Evolution Series</h2>
-        <div class="sets-grid">
-            <a href="kartenliste.html?set=me01&name=Mega Evolution" class="card-wrapper" data-id="me01" data-total="188">
-                <div class="set-card-box"><img src="bilder/me01.png" onerror="this.src='bilder/placeholder.png'"><h3>Mega Evolution</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-me01"></div></div>
-                    <div class="stats"><span id="perc-me01">0%</span><span id="stat-me01">0/188</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=me02&name=Phantasmal Flames" class="card-wrapper" data-id="me02" data-total="130">
-                <div class="set-card-box"><img src="bilder/me02.png" onerror="this.src='bilder/placeholder.png'"><h3>Phantasmal Flames</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-me02"></div></div>
-                    <div class="stats"><span id="perc-me02">0%</span><span id="stat-me02">0/130</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=me02.5&name=Ascended Heroes" class="card-wrapper" data-id="me02.5" data-total="295">
-                <div class="set-card-box"><img src="bilder/me02.5.png" onerror="this.src='bilder/placeholder.png'"><h3>Ascended Heroes</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-me02.5"></div></div>
-                    <div class="stats"><span id="perc-me02.5">0%</span><span id="stat-me02.5">0/295</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=me03&name=Perfect Order" class="card-wrapper" data-id="me03" data-total="120">
-                <div class="set-card-box"><img src="bilder/me03.png" onerror="this.src='bilder/placeholder.png'"><h3>Perfect Order</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-me03"></div></div>
-                    <div class="stats"><span id="perc-me03">0%</span><span id="stat-me03">0/120</span></div>
-                </div>
-            </a>
+<div class="sets-grid">
+    <a href="kartenliste.html?set=me01&name=Mega Evolution" class="card-wrapper" data-id="me01" data-total="188">
+        <div class="set-card-box">
+            <img src="bilder/me01.png" onerror="this.src='bilder/placeholder.png'">
+            <h3>Mega Evolution</h3>
         </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-me01"></div></div>
+            <div class="stats"><span id="perc-me01">0%</span><span id="stat-me01">0/188</span></div>
+        </div>
+    </a>
 
-        <h2 class="section-title">Halloween Specials (Trick or Trade)</h2>
-        <div class="sets-grid">
-            <a href="kartenliste.html?set=tot22&name=Trick or Trade 2022" class="card-wrapper" data-id="tot22" data-total="30">
-                <div class="set-card-box"><img src="bilder/tot22.png"><h3>Trick or Trade 2022</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-tot22"></div></div>
-                    <div class="stats"><span id="perc-tot22">0%</span><span id="stat-tot22">0/30</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=tot23&name=Trick or Trade 2023" class="card-wrapper" data-id="tot23" data-total="30">
-                <div class="set-card-box"><img src="bilder/tot23.png"><h3>Trick or Trade 2023</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-tot23"></div></div>
-                    <div class="stats"><span id="perc-tot23">0%</span><span id="stat-tot23">0/30</span></div>
-                </div>
-            </a>
-            <a href="kartenliste.html?set=tot24&name=Trick or Trade 2024" class="card-wrapper" data-id="tot24" data-total="30">
-                <div class="set-card-box"><img src="bilder/tot24.png"><h3>Trick or Trade 2024</h3></div>
-                <div class="progress-section">
-                    <div class="progress-bar"><div class="progress-fill" id="fill-tot24"></div></div>
-                    <div class="stats"><span id="perc-tot24">0%</span><span id="stat-tot24">0/30</span></div>
-                </div>
-            </a>
+    <a href="kartenliste.html?set=me02&name=Phantasmal Flames" class="card-wrapper" data-id="me02" data-total="130">
+        <div class="set-card-box">
+            <img src="bilder/me02.png" onerror="this.src='bilder/placeholder.png'">
+            <h3>Phantasmal Flames</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-me02"></div></div>
+            <div class="stats"><span id="perc-me02">0%</span><span id="stat-me02">0/130</span></div>
+        </div>
+    </a>
+
+    <a href="kartenliste.html?set=me02.5&name=Ascended Heroes" class="card-wrapper" data-id="me02.5" data-total="295">
+        <div class="set-card-box">
+            <img src="bilder/me02.5.png" onerror="this.src='bilder/placeholder.png'">
+            <h3>Ascended Heroes</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-me02.5"></div></div>
+            <div class="stats"><span id="perc-me02.5">0%</span><span id="stat-me02.5">0/295</span></div>
+        </div>
+    </a>
+
+    <a href="kartenliste.html?set=me03&name=Perfect Order" class="card-wrapper" data-id="me03" data-total="120">
+        <div class="set-card-box">
+            <img src="bilder/me03.png" onerror="this.src='bilder/placeholder.png'">
+            <h3>Perfect Order</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-me03"></div></div>
+            <div class="stats"><span id="perc-me03">0%</span><span id="stat-me03">0/120</span></div>
+        </div>
+    </a>
+</div>
+            
+            <h2 class="section-title">Halloween Specials (Trick or Trade)</h2>
+            <div class="sets-grid">
+    <a href="kartenliste.html?set=tot22&name=Trick or Trade 2022" class="card-wrapper" data-id="tot22" data-total="30">
+        <div class="set-card-box">
+            <img src="bilder/tot22.png"> <h3>Trick or Trade 2022</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-tot22"></div></div>
+            <div class="stats"><span id="perc-tot22">0%</span><span id="stat-tot22">0/30</span></div>
+        </div>
+    </a>
+
+    <a href="kartenliste.html?set=tot23&name=Trick or Trade 2023" class="card-wrapper" data-id="tot23" data-total="30">
+        <div class="set-card-box">
+            <img src="bilder/tot23.png">
+            <h3>Trick or Trade 2023</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-tot23"></div></div>
+            <div class="stats"><span id="perc-tot23">0%</span><span id="stat-tot23">0/30</span></div>
+        </div>
+    </a>
+
+    <a href="kartenliste.html?set=tot24&name=Trick or Trade 2024" class="card-wrapper" data-id="tot24" data-total="30">
+        <div class="set-card-box">
+            <img src="bilder/tot24.png">
+            <h3>Trick or Trade 2024</h3>
+        </div>
+        <div class="progress-section">
+            <div class="progress-bar"><div class="progress-fill" id="fill-tot24"></div></div>
+            <div class="stats"><span id="perc-tot24">0%</span><span id="stat-tot24">0/30</span></div>
+        </div>
+    </a>
         </div>
 
         <h2 class="section-title">Japanische Sets</h2>
@@ -434,6 +499,7 @@
                     <div class="stats"><span id="perc-sm10b">0%</span><span id="stat-sm10b">0/69</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=sm11&name=Miracle Twins" class="card-wrapper" data-id="sm11" data-total="115">
                 <div class="set-card-box"><img src="bilder/sm11.png"><h3>Miracle Twins</h3></div>
                 <div class="progress-section">
@@ -441,6 +507,7 @@
                     <div class="stats"><span id="perc-sm11">0%</span><span id="stat-sm11">0/115</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=sm11a&name=Remix Bout" class="card-wrapper" data-id="sm11a" data-total="80">
                 <div class="set-card-box"><img src="bilder/sm11a.png"><h3>Remix Bout</h3></div>
                 <div class="progress-section">
@@ -448,6 +515,7 @@
                     <div class="stats"><span id="perc-sm11a">0%</span><span id="stat-sm11a">0/80</span></div>
                 </div>
             </a>
+
             <a href="kartenliste.html?set=smp2&name=Det. Pikachu" class="card-wrapper" data-id="smp2" data-total="24">
                 <div class="set-card-box"><img src="bilder/smp2.png"><h3>Det. Pikachu</h3></div>
                 <div class="progress-section">
@@ -458,7 +526,8 @@
         </div>
     </div>
 
-    <script>
+   <script>
+        // DARK MODE INITIALISIERUNG
         function initDarkMode() {
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.body.classList.add('dark-mode');
@@ -470,6 +539,7 @@
             localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
         }
 
+        // FORTSCHRITT AKTUALISIEREN & VISUELLES FEEDBACK
         function updateHomeProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
                 const setId = set.getAttribute('data-id');
@@ -481,10 +551,14 @@
                     try {
                         const ownedCards = JSON.parse(saved);
                         count = ownedCards.length;
-                    } catch(e) { count = 0; }
+                    } catch(e) {
+                        count = 0;
+                    }
                 }
 
                 const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+
+                // DOM-Elemente updaten
                 const fill = document.getElementById(`fill-${setId}`);
                 const perc = document.getElementById(`perc-${setId}`);
                 const stat = document.getElementById(`stat-${setId}`);
@@ -493,19 +567,22 @@
                 if (perc) perc.innerText = percent + '%';
                 if (stat) stat.innerText = `${count}/${total}`;
 
+                // VISUELLES FEEDBACK
                 set.classList.remove('set-locked', 'set-completed');
+
                 if (count === 0) {
                     set.classList.add('set-locked');
-                    if (fill) fill.style.backgroundColor = "#e0e0e0";
+                    if (fill) fill.style.backgroundColor = "#e0e0e0"; // Grau wenn leer
                 } else if (percent === 100) {
                     set.classList.add('set-completed');
-                    if (fill) fill.style.backgroundColor = "#d4af37";
+                    if (fill) fill.style.backgroundColor = "#d4af37"; // Gold wenn voll
                 } else {
-                    if (fill) fill.style.backgroundColor = "#2ecc71";
+                    if (fill) fill.style.backgroundColor = "#2ecc71"; // Grün wenn in Arbeit
                 }
             });
         }
 
+        // SUCHE
         function filterSets() {
             const query = document.getElementById('search-input').value.toLowerCase();
             document.querySelectorAll('.card-wrapper').forEach(card => {
@@ -514,19 +591,7 @@
             });
         }
 
-        function applyStatusFilter(status) {
-            document.querySelectorAll('.card-wrapper').forEach(card => {
-                const isLocked = card.classList.contains('set-locked');
-                const isCompleted = card.classList.contains('set-completed');
-                const isStarted = !isLocked && !isCompleted;
-
-                if (status === 'all') card.style.display = "block";
-                else if (status === 'started') card.style.display = isStarted ? "block" : "none";
-                else if (status === 'completed') card.style.display = isCompleted ? "block" : "none";
-                else if (status === 'empty') card.style.display = isLocked ? "block" : "none";
-            });
-        }
-
+        // BACKUP FUNKTIONEN
         function exportBackup() {
             const data = {};
             for (let i = 0; i < localStorage.length; i++) {
@@ -540,7 +605,23 @@
             a.download = 'pokemon_backup.json';
             a.click();
         }
+            function applyStatusFilter(status) {
+    document.querySelectorAll('.card-wrapper').forEach(card => {
+        const isLocked = card.classList.contains('set-locked');
+        const isCompleted = card.classList.contains('set-completed');
+        const isStarted = !isLocked && !isCompleted;
 
+        if (status === 'all') {
+            card.style.display = "block";
+        } else if (status === 'started') {
+            card.style.display = isStarted ? "block" : "none";
+        } else if (status === 'completed') {
+            card.style.display = isCompleted ? "block" : "none";
+        } else if (status === 'empty') {
+            card.style.display = isLocked ? "block" : "none";
+        }
+    });
+}
         function importBackup(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -549,43 +630,42 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     localStorage.clear();
-                    for (const key in data) { localStorage.setItem(key, data[key]); }
+                    for (const key in data) {
+                        localStorage.setItem(key, data[key]);
+                    }
                     location.reload();
-                } catch(err) { alert("Ungültige Backup-Datei!"); }
+                } catch(err) {
+                    alert("Ungültige Backup-Datei!");
+                }
             };
             reader.readAsText(file);
         }
 
+        // INITIALISIERUNG BEIM LADEN
         window.addEventListener('DOMContentLoaded', () => {
             initDarkMode();
             updateHomeProgress();
         });
+// Überwacht das Scroll-Verhalten
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    // Zeigt den Button an, wenn mehr als 300px gescrollt wurde
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btn.style.display = "flex";
+    } else {
+        btn.style.display = "none";
+    }
+};
 
-        window.onscroll = function() {
-            const btn = document.getElementById("backToTop");
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                btn.style.display = "flex";
-            } else { btn.style.display = "none"; }
-        };
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
+// Die eigentliche Scroll-Funktion
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Sorgt für ein sanftes Gleiten statt einem harten Sprung
+    });
+}
+        // Wichtig: Update auch wenn man per "Zurück"-Button kommt
         window.addEventListener('pageshow', updateHomeProgress);
-
-        window.addEventListener('beforeunload', () => {
-            sessionStorage.setItem('scrollPosition', window.scrollY);
-        });
-
-        window.addEventListener('load', () => {
-            const scrollPos = sessionStorage.getItem('scrollPosition');
-            if (scrollPos) {
-                setTimeout(() => {
-                    window.scrollTo({ top: parseInt(scrollPos), behavior: 'smooth' });
-                }, 100); 
-            }
-        });
     </script>
 </body>
 </html>
