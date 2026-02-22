@@ -407,7 +407,7 @@ body.dark-mode .set-completed::after {
         </div>
     </div>
 
-    <script>
+   <script>
         // DARK MODE INITIALISIERUNG
         function initDarkMode() {
             if (localStorage.getItem('darkMode') === 'enabled') {
@@ -420,7 +420,7 @@ body.dark-mode .set-completed::after {
             localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
         }
 
-// FORTSCHRITT AKTUALISIEREN & VISUELLES FEEDBACK
+        // FORTSCHRITT AKTUALISIEREN & VISUELLES FEEDBACK
         function updateHomeProgress() {
             document.querySelectorAll('.card-wrapper').forEach(set => {
                 const setId = set.getAttribute('data-id');
@@ -429,13 +429,17 @@ body.dark-mode .set-completed::after {
                 
                 let count = 0;
                 if (saved) {
-                    const ownedCards = JSON.parse(saved);
-                    count = ownedCards.length;
+                    try {
+                        const ownedCards = JSON.parse(saved);
+                        count = ownedCards.length;
+                    } catch(e) {
+                        count = 0;
+                    }
                 }
 
                 const percent = total > 0 ? Math.round((count / total) * 100) : 0;
 
-                // DOM-Elemente für Texte und Balken updaten
+                // DOM-Elemente updaten
                 const fill = document.getElementById(`fill-${setId}`);
                 const perc = document.getElementById(`perc-${setId}`);
                 const stat = document.getElementById(`stat-${setId}`);
@@ -444,32 +448,27 @@ body.dark-mode .set-completed::after {
                 if (perc) perc.innerText = percent + '%';
                 if (stat) stat.innerText = `${count}/${total}`;
 
-                // VISUELLES FEEDBACK: Klassen bereinigen
+                // VISUELLES FEEDBACK
                 set.classList.remove('set-locked', 'set-completed');
 
-                // Logik für die Anzeige
                 if (count === 0) {
-                    // Set ist noch komplett leer -> Ausgrauen
                     set.classList.add('set-locked');
+                    if (fill) fill.style.backgroundColor = "#e0e0e0"; // Grau wenn leer
                 } else if (percent === 100) {
-                    // Set ist zu 100% fertig -> Goldener Rahmen & Glow
                     set.classList.add('set-completed');
-                    
-                    // Optional: Den Fortschrittsbalken bei 100% gold färben
-                    if (fill) fill.style.backgroundColor = "#d4af37";
+                    if (fill) fill.style.backgroundColor = "#d4af37"; // Gold wenn voll
                 } else {
-                    // Set ist im Prozess (1-99%) -> Standardfarbe (Grün)
-                    if (fill) fill.style.backgroundColor = "#2ecc71";
+                    if (fill) fill.style.backgroundColor = "#2ecc71"; // Grün wenn in Arbeit
                 }
             });
-        }  }
+        }
 
         // SUCHE
         function filterSets() {
             const query = document.getElementById('search-input').value.toLowerCase();
             document.querySelectorAll('.card-wrapper').forEach(card => {
                 const setName = card.querySelector('h3').innerText.toLowerCase();
-                card.classList.toggle('hidden', !setName.includes(query));
+                card.style.display = setName.includes(query) ? "block" : "none";
             });
         }
 
@@ -507,15 +506,18 @@ body.dark-mode .set-completed::after {
             reader.readAsText(file);
         }
 
-        // EVENTS
+        // INITIALISIERUNG BEIM LADEN
         window.addEventListener('DOMContentLoaded', () => {
             initDarkMode();
             updateHomeProgress();
         });
+
+        // Wichtig: Update auch wenn man per "Zurück"-Button kommt
         window.addEventListener('pageshow', updateHomeProgress);
     </script>
 </body>
 </html>
+
 
 
 
