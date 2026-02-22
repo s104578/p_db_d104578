@@ -117,10 +117,16 @@
             transition: filter 0.5s ease;
         }
 
+      /* 1. Die Kachel ist grau, wenn keine Karten gesammelt wurden */
         .card-wrapper.set-locked {
-            filter: grayscale(100%) opacity(0.5) !important;
+            filter: grayscale(100%) opacity(0.6) !important;
+            transition: filter 0.3s ease, opacity 0.3s ease; /* Macht den Übergang weich */
         }
 
+/* 2. DIESER TEIL FEHLTE: Beim Hovern wird die Farbe wieder sichtbar */
+        .card-wrapper.set-locked:hover {
+            filter: grayscale(20%) opacity(1) !important; /* Fast volle Farbe beim Drüberfahren */
+        }
         .set-card-box {
             background-color: var(--card-bg);
             border-radius: 15px;
@@ -339,3 +345,4 @@
     </script>
 </body>
 </html>
+
