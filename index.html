@@ -30,34 +30,37 @@
             --container-bg: var(--dark-blue-gray);
             --card-bg: var(--light-blue-gray);
         }
-/* Effekt für das komplette Set */
-.set-completed {
-    border: 2px solid #d4af37 !important; /* Goldener Rahmen */
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); /* Goldener Schimmer */
-    position: relative;
-}
 
-/* Optional: Ein kleines Gold-Abzeichen (Badge) oben rechts an der Kachel */
-.set-completed::after {
-    content: '🏆';
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 1.2rem;
-    background: white;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
+        /* Effekt für das komplette Set */
+        .set-completed {
+            border: 2px solid #d4af37 !important; /* Goldener Rahmen */
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); /* Goldener Schimmer */
+            position: relative;
+        }
 
-/* Im Dark Mode das Weiß des Badges anpassen */
-body.dark-mode .set-completed::after {
-    background: var(--light-blue-gray);
-}
+        /* Gold-Abzeichen (Badge) oben rechts an der Kachel */
+        .set-completed::after {
+            content: '🏆';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 1.2rem;
+            background: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        /* Im Dark Mode das Weiß des Badges anpassen */
+        body.dark-mode .set-completed::after {
+            background: var(--light-blue-gray);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -104,13 +107,8 @@ body.dark-mode .set-completed::after {
         .btn:active { transform: scale(0.98); }
         .btn-export { background-color: var(--accent-blue); }
         .btn-import { background-color: #95a5a6; }
-        <div class="filter-group" style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-    <button class="btn" style="background: #7f8c8d;" onclick="applyStatusFilter('all')">Alle</button>
-    <button class="btn" style="background: #e67e22;" onclick="applyStatusFilter('started')">Begonnen</button>
-    <button class="btn" style="background: #27ae60;" onclick="applyStatusFilter('completed')">Abgeschlossen</button>
-    <button class="btn" style="background: #c0392b;" onclick="applyStatusFilter('empty')">Fehlend</button>
-</div>
 
+        /* Dark Mode Button Positionierung */
         #dark-mode-toggle {
             position: fixed;
             top: 20px;
@@ -143,6 +141,14 @@ body.dark-mode .set-completed::after {
             margin-bottom: 50px;
         }
 
+        /* Responsive Grid für kleinere Bildschirme */
+        @media (max-width: 900px) {
+            .sets-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .sets-grid { grid-template-columns: 1fr; }
+        }
+
         .card-wrapper {
             text-decoration: none !important;
             color: inherit !important;
@@ -150,16 +156,16 @@ body.dark-mode .set-completed::after {
             transition: filter 0.5s ease;
         }
 
-      /* 1. Die Kachel ist grau, wenn keine Karten gesammelt wurden */
+        /* Die Kachel ist grau, wenn keine Karten gesammelt wurden */
         .card-wrapper.set-locked {
             filter: grayscale(100%) opacity(0.6) !important;
-            transition: filter 0.3s ease, opacity 0.3s ease; /* Macht den Übergang weich */
+            transition: filter 0.3s ease, opacity 0.3s ease;
         }
 
-/* 2. DIESER TEIL FEHLTE: Beim Hovern wird die Farbe wieder sichtbar */
         .card-wrapper.set-locked:hover {
-            filter: grayscale(20%) opacity(1) !important; /* Fast volle Farbe beim Drüberfahren */
+            filter: grayscale(20%) opacity(1) !important;
         }
+
         .set-card-box {
             background-color: var(--card-bg);
             border-radius: 15px;
@@ -171,10 +177,12 @@ body.dark-mode .set-completed::after {
             transition: transform 0.2s, box-shadow 0.2s;
             padding: 15px;
         }
+
         .set-card-box:hover { 
             transform: scale(1.03); 
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
+
         .set-card-box img { max-width: 90%; max-height: 100px; object-fit: contain; }
         .set-card-box h3 { margin-top: 15px; font-size: 1.1rem; text-align: center; }
 
@@ -539,6 +547,7 @@ body.dark-mode .set-completed::after {
     </script>
 </body>
 </html>
+
 
 
 
