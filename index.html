@@ -97,12 +97,22 @@
         margin-bottom: 60px;
     }
 
-    /* Kachel-Design */
-    .card-wrapper {
-        transition: filter 0.5s ease, transform 0.3s ease;
-        filter: grayscale(0%); /* Standardmäßig farbig */
-    }
+  /* 1. Standard: Kachel ist farbig */
+.card-wrapper {
+    transition: filter 0.5s ease, transform 0.3s ease;
+    text-decoration: none !important;
+    color: #000 !important;
+    display: block;
+    /* Entferne hier das feste 'filter: grayscale(0%)', um Konflikte zu vermeiden */
+}
 
+/* 2. Wenn das Set noch nicht entdeckt wurde (WICHTIG: .card-wrapper.set-locked schreiben) */
+.card-wrapper.set-locked {
+    filter: grayscale(100%) opacity(0.6) !important;
+}
+    .card-wrapper.set-locked:hover {
+    filter: grayscale(40%) opacity(0.9) !important;
+}
     .set-card-box {
         background-color: #f2f2f2;
         border-radius: 15px;
@@ -364,6 +374,7 @@ window.addEventListener('pageshow', updateHomeProgress);
 </script>
 </body>
 </html>
+
 
 
 
