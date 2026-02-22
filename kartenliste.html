@@ -103,7 +103,7 @@
 
         async function init() {
             if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
-            document.getElementById('set-logo').src = `bilder/${setId}.png`;
+            document.getElementById('set-logo').src = `getCardImageUrl(karte.id);
             document.getElementById('set-title').innerText = urlParams.get('name') || "Set";
 
             const res = await fetch(`daten/${setId}.json`);
@@ -111,7 +111,13 @@
             renderTable(allCards);
             updateProgress();
         }
-
+        // Diese Funktion wandelt deine IDs (z.B. base1-1) in API-Links um
+function getCardImageUrl(cardId) {
+    const parts = cardId.split('-');
+    const setId = parts[0];
+    const cardNumber = parts[1];
+    return `https://images.pokemontcg.io/${setId}/${cardNumber}.png`;
+}
         function renderTable(cards) {
             const tbody = document.getElementById('table-body');
             const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -154,3 +160,4 @@
     </script>
 </body>
 </html>
+
