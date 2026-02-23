@@ -33,8 +33,6 @@
   { "id": "sv1-32", "n": "032", "nameDE": "Mimigma", "r": "Rare Holo" },
   { "id": "sv1-33", "n": "033", "nameDE": "Heiteira", "r": "Rare" },
   { "id": "sv1-198", "n": "198", "nameDE": "Professor Antiquas Forschung", "r": "Rare Holo" },
-  
-  /* --- Secret Rares (Illustration Rares) --- */
   { "id": "sv1-199", "n": "199", "nameDE": "Ferkuli", "r": "Illustration Rare" },
   { "id": "sv1-200", "n": "200", "nameDE": "Tarountula", "r": "Illustration Rare" },
   { "id": "sv1-201", "n": "201", "nameDE": "Dolliv", "r": "Illustration Rare" },
@@ -52,8 +50,6 @@
   { "id": "sv1-213", "n": "213", "nameDE": "Greavard", "r": "Illustration Rare" },
   { "id": "sv1-214", "n": "214", "nameDE": "Riolu", "r": "Illustration Rare" },
   { "id": "sv1-215", "n": "215", "nameDE": "Sandile", "r": "Illustration Rare" },
-
-  /* --- Ultra Rares (Full Art) --- */
   { "id": "sv1-221", "n": "221", "nameDE": "Spidops ex", "r": "Ultra Rare" },
   { "id": "sv1-222", "n": "222", "nameDE": "Arkani ex", "r": "Ultra Rare" },
   { "id": "sv1-223", "n": "223", "nameDE": "Skelokrok ex", "r": "Ultra Rare" },
@@ -69,16 +65,12 @@
   { "id": "sv1-233", "n": "233", "nameDE": "Pancham ex", "r": "Ultra Rare" },
   { "id": "sv1-234", "n": "234", "nameDE": "Toxiquak ex", "r": "Ultra Rare" },
   { "id": "sv1-235", "n": "235", "nameDE": "Magnezone ex", "r": "Ultra Rare" },
-
-  /* --- Special Illustration Rares --- */
   { "id": "sv1-243", "n": "243", "nameDE": "Spidops ex", "r": "Special Illustration Rare" },
   { "id": "sv1-244", "n": "244", "nameDE": "Skelokrok ex", "r": "Special Illustration Rare" },
   { "id": "sv1-245", "n": "245", "nameDE": "Bailonda ex", "r": "Special Illustration Rare" },
   { "id": "sv1-246", "n": "246", "nameDE": "Miraidon ex", "r": "Special Illustration Rare" },
   { "id": "sv1-247", "n": "247", "nameDE": "Gardevoir ex", "r": "Special Illustration Rare" },
   { "id": "sv1-248", "n": "248", "nameDE": "Koraidon ex", "r": "Special Illustration Rare" },
-
-  /* --- Gold Cards --- */
   { "id": "sv1-253", "n": "253", "nameDE": "Miraidon ex", "r": "Hyper Rare" },
   { "id": "sv1-254", "n": "254", "nameDE": "Koraidon ex", "r": "Hyper Rare" },
   { "id": "sv1-255", "n": "255", "nameDE": "Nestball", "r": "Hyper Rare" },
