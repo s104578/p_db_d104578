@@ -169,15 +169,20 @@
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
     }
+    const localImageFolder = "bilder/Kartenbilder";
 
+function getLocalCardImageUrl(cardId) {
+    // Erzeugt den Pfad: bilder/Kartenbilder/zsv10pt5-1.png
+    return `${localImageFolder}/${cardId}.png`;
+}
     // Diese Funktion wandelt deine IDs (z.B. base1-1) in API-Links um
-    function getCardImageUrl(cardId) {
-        if (!cardId) return '';
-        const parts = cardId.split('-');
-        const sId = parts[0];
-        const cardNumber = parts[1];
-        return `https://images.pokemontcg.io/${sId}/${cardNumber}.png`;
-    }
+    function getApiCardImageUrl(cardId) {
+    if (!cardId) return '';
+    const parts = cardId.split('-');
+    const sId = parts[0];
+    const cardNumber = parts[1];
+    return `https://images.pokemontcg.io/${sId}/${cardNumber}.png`;
+}
     async function init() {
         if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
         
@@ -198,33 +203,32 @@
     }
 
    function renderTable(cards) {
-        const tbody = document.getElementById('table-body');
-        const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
+    const tbody = document.getElementById('table-body');
+    const owned = JSON.parse(localStorage.getItem(storageKey)) || [];
+    
+    tbody.innerHTML = cards.map(card => {
+        const localImgUrl = getLocalCardImageUrl(card.id);
+        const apiImgUrl = getApiCardImageUrl(card.id);
+        const rarityDisplay = card.rarity || card.r || '-';
         
-        tbody.innerHTML = cards.map(card => {
-            const apiImgUrl = getCardImageUrl(card.id);
-            
-            // Hier wird nach 'rarity' ODER 'r' gesucht
-            const rarityDisplay = card.rarity || card.r || '-';
-            
-            return `
-                <tr>
-                    <td>
-                        <img src="${apiImgUrl}" 
-                             class="card-img" 
-                             loading="lazy" 
-                             style="cursor: pointer;" 
-                             onclick="openModal('${apiImgUrl}')" 
-                             onerror="this.src='bilder/placeholder.png'">
-                    </td>
-                    <td>${card.n}</td>
-                    <td>${card.nameDE || card.name}</td>
-                    <td>${rarityDisplay}</td> 
-                    <td><input type="checkbox" ${owned.includes(card.id) ? 'checked' : ''} onchange="toggleCard('${card.id}')"></td>
-                </tr>
-            `;
-        }).join('');
-    }
+        return `
+            <tr>
+                <td>
+                    <img src="${localImgUrl}" 
+                         class="card-img" 
+                         loading="lazy" 
+                         style="cursor: pointer;" 
+                         onclick="openModal(this.src)" 
+                         onerror="if (this.src != '${apiImgUrl}') { this.src='${apiImgUrl}'; } else { this.onerror=null; this.src='bilder/placeholder.png'; }">
+                </td>
+                <td>${card.n}</td>
+                <td>${card.nameDE || card.name}</td>
+                <td>${rarityDisplay}</td> 
+                <td><input type="checkbox" ${owned.includes(card.id) ? 'checked' : ''} onchange="toggleCard('${card.id}')"></td>
+            </tr>
+        `;
+    }).join('');
+}
 
     function toggleCard(id) {
         let owned = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -299,6 +303,7 @@ function scrollToTop() {
 </div>
 </body>
 </html>
+
 
 
 
